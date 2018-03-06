@@ -11,4 +11,6 @@ public interface UserService {
 
     boolean doRegister(UserPO userPO, String email);
 
+    int cancelVIP(String userID);
+
 }

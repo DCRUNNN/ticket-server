@@ -4,9 +4,8 @@ public class SeatPO {
 
     private String venueID;
     private String area; //区域
-    private String row; //排
-    private String seat; //座
-    private String state;
+    private String row; //排号
+    private String seat; //座位号
 
     public SeatPO() {
     }
@@ -43,22 +42,13 @@ public class SeatPO {
         this.seat = seat;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
     @Override
     public String toString() {
         return "SeatPO{" +
                 "venueID='" + venueID + '\'' +
                 ", area='" + area + '\'' +
-                ", row='" + row + '\'' +
+                ", row=" + row +
                 ", seat='" + seat + '\'' +
-                ", state='" + state + '\'' +
                 '}';
     }
 }

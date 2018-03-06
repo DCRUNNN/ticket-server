@@ -10,6 +10,8 @@ public interface UserDao {
 
     int activeUser(String activeCode);
 
+    int cancelVIP(String userID);
+
     String getUserID(String username);
 
     String getUsername(String userID);

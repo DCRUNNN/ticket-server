@@ -14,11 +14,11 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public int addUser(UserPO userPO) {
-        String sql = "insert into user(username,userID,password,email,isVIP,vipLevel,phoneNumber,balance,state,activeCode) values "
+        String sql = "insert into user(username,userID,password,email,isVIP,vipLevel,phoneNumber,balance,totalConsumption,state,activeCode) values "
                 + "("
                 + '"' + userPO.getUsername() + '"'+ "," + '"' + userPO.getUserID() + '"' + "," + '"' + userPO.getPassword() + '"' + "," + '"' + userPO.getEmail() + '"'
                 + "," + userPO.isVIP() + "," + '"' + userPO.getVipLevel() + '"' + "," + '"' + userPO.getPhoneNumber() + '"' + "," + '"' +userPO.getBalance()+ '"'
-                + "," + '"' +userPO.getState()+ '"' + "," + '"' +userPO.getActiveCode()+'"'
+                + "," + '"'+ userPO.getTotalConsumption()+ '"' + "," + '"' +userPO.getState()+ '"' + "," + '"' +userPO.getActiveCode()+'"'
                 + ")";
         return jdbcTemplate.update(sql);
     }
@@ -32,6 +32,12 @@ public class UserDaoImpl implements UserDao{
     @Override
     public int activeUser(String activeCode) {
         String sql = "update user set state = " + '"' + "已激活" + '"' + " where activeCode = " + '"' + activeCode + '"';
+        return jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public int cancelVIP(String userID) {
+        String sql = "update user set isVIP = 0 , vipLevel = -1 where userID = " + '"' + userID + '"';
         return jdbcTemplate.update(sql);
     }
 

@@ -10,6 +10,7 @@ public class UserPO {
     private int vipLevel;
     private String phoneNumber;
     private double balance;
+    private double totalConsumption; //总消费金额
     private String state; //未激活，激活
     private String activeCode; //激活码
 
@@ -81,6 +82,14 @@ public class UserPO {
         this.balance = balance;
     }
 
+    public double getTotalConsumption() {
+        return totalConsumption;
+    }
+
+    public void setTotalConsumption(double totalConsumption) {
+        this.totalConsumption = totalConsumption;
+    }
+
     public String getState() {
         return state;
     }
@@ -108,6 +117,7 @@ public class UserPO {
                 ", vipLevel=" + vipLevel +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", balance=" + balance +
+                ", totalConsumption=" + totalConsumption +
                 ", state='" + state + '\'' +
                 ", activeCode='" + activeCode + '\'' +
                 '}';

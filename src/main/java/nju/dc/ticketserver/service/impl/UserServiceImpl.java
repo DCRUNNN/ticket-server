@@ -8,9 +8,9 @@ import nju.dc.ticketserver.utils.ActiveCodeHelper;
 import nju.dc.ticketserver.utils.EncryptHelper;
 import nju.dc.ticketserver.utils.MailHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -52,5 +52,10 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int cancelVIP(String userID) {
+        return userDao.cancelVIP(userID);
     }
 }

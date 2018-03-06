@@ -11,7 +11,7 @@ public class ShowPO {
     private String venueName;
     private String performer;
     private String showName;
-    private String date;
+    private String showDate;
     private double[] price;  //数据库中以varchar形式存储，数字之间以/隔开
     private String description;
     private String state;
@@ -75,12 +75,12 @@ public class ShowPO {
         this.showName = showName;
     }
 
-    public String getDate() {
-        return date;
+    public String getShowDate() {
+        return showDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setShowDate(String showDate) {
+        this.showDate = showDate;
     }
 
     public double[] getPrice() {
@@ -117,7 +117,7 @@ public class ShowPO {
                 ", venueName='" + venueName + '\'' +
                 ", performer='" + performer + '\'' +
                 ", showName='" + showName + '\'' +
-                ", date='" + date + '\'' +
+                ", showDate='" + showDate + '\'' +
                 ", price=" + Arrays.toString(price) +
                 ", description='" + description + '\'' +
                 ", state='" + state + '\'' +

@@ -8,11 +8,13 @@ public class VenuePO {
     private String venueID;
     private String city;
     private String address;
-    private String[] area; //区域 数据库中以varchar形式存储，以/隔开
-    private List<SeatPO> seatPOList = new ArrayList<>();  //数据库中存入seat表，area row seat
+    private String area; //区域 数据库中以varchar形式存储，以/隔开
+    private int row; //一共有几排
+    private String seat;
     private String venueInfo;
     private String regDate; //场馆注册时间
     private double income;
+    private String state; //需要经理审批
 
     public VenuePO() {
     }
@@ -49,20 +51,28 @@ public class VenuePO {
         this.address = address;
     }
 
-    public String[] getArea() {
+    public String getArea() {
         return area;
     }
 
-    public void setArea(String[] area) {
+    public void setArea(String area) {
         this.area = area;
     }
 
-    public List<SeatPO> getSeatPOList() {
-        return seatPOList;
+    public int getRow() {
+        return row;
     }
 
-    public void setSeatPOList(List<SeatPO> seatPOList) {
-        this.seatPOList = seatPOList;
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public String getSeat() {
+        return seat;
+    }
+
+    public void setSeat(String seat) {
+        this.seat = seat;
     }
 
     public String getVenueInfo() {
@@ -89,6 +99,14 @@ public class VenuePO {
         this.income = income;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "VenuePO{" +
@@ -96,11 +114,13 @@ public class VenuePO {
                 ", venueID='" + venueID + '\'' +
                 ", city='" + city + '\'' +
                 ", address='" + address + '\'' +
-                ", area=" + Arrays.toString(area) +
-                ", seatPOList=" + seatPOList +
+                ", area=" + area +
+                ", row=" + row +
+                ", seat='" + seat + '\'' +
                 ", venueInfo='" + venueInfo + '\'' +
                 ", regDate='" + regDate + '\'' +
                 ", income=" + income +
+                ", state='" + state + '\'' +
                 '}';
     }
 }

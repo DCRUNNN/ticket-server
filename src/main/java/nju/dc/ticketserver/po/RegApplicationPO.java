@@ -1,6 +1,7 @@
 package nju.dc.ticketserver.po;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //场馆注册申请
@@ -10,7 +11,9 @@ public class RegApplicationPO {
     private String venueID;
     private String city;
     private String venueAddress;
-    private List<SeatPO> seatPOList = new ArrayList<>();
+    private String area;  // A/B/C
+    private int row;
+    private String seat;
     private String venueInfo;
     private String applicationTime;
     private String state;
@@ -50,12 +53,28 @@ public class RegApplicationPO {
         this.venueAddress = venueAddress;
     }
 
-    public List<SeatPO> getSeatPOList() {
-        return seatPOList;
+    public String getArea() {
+        return area;
     }
 
-    public void setSeatPOList(List<SeatPO> seatPOList) {
-        this.seatPOList = seatPOList;
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public String getSeat() {
+        return seat;
+    }
+
+    public void setSeat(String seat) {
+        this.seat = seat;
     }
 
     public String getVenueInfo() {
@@ -89,7 +108,9 @@ public class RegApplicationPO {
                 ", venueID='" + venueID + '\'' +
                 ", city='" + city + '\'' +
                 ", venueAddress='" + venueAddress + '\'' +
-                ", seat=" + seatPOList +
+                ", area=" + area +
+                ", row=" + row +
+                ", seat='" + seat + '\'' +
                 ", venueInfo='" + venueInfo + '\'' +
                 ", applicationTime='" + applicationTime + '\'' +
                 ", state='" + state + '\'' +

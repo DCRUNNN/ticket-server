@@ -30,4 +30,11 @@ public class UserController {
         return result == 1 ? new BaseResult<>(0, "Active User Successfully!") : new BaseResult<>(-1, "Fail to active user!");
     }
 
+    @PostMapping("/cancelVIP")
+    public BaseResult cancelVIP(@RequestParam String userID) {
+
+        int result = userService.cancelVIP(userID);
+        return result == 1 ? new BaseResult<>(0, "cancel VIP Successfully!") : new BaseResult<>(-1, "Fail to cancel VIP!");
+    }
+
 }
