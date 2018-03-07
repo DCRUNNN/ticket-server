@@ -6,4 +6,8 @@ public interface OrderDao {
 
     OrderPO getOrderPO(String orderID);
 
+    int createOrder(OrderPO orderPO);
+
+
+
 }

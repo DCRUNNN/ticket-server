@@ -7,6 +7,8 @@ import nju.dc.ticketserver.service.VenueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class VenueServiceImpl implements VenueService {
 
@@ -37,8 +39,8 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public int releaseShowPlan(ShowPO showPO, ShowSeatPO showSeatPO) {
-        return venueDao.releaseShowPlan(showPO, showSeatPO);
+    public int releaseShowPlan(ShowPO showPO, List<ShowSeatPO> showSeatPOList) {
+        return venueDao.releaseShowPlan(showPO, showSeatPOList);
     }
 
 }

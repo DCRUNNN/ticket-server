@@ -83,7 +83,10 @@ public class ManagerDaoImpl implements ManagerDao {
             tempPO.setRow(resultSet.getInt("row"));
             tempPO.setSeat(resultSet.getString("seat"));
             tempPO.setVenueInfo(resultSet.getString("venueInfo"));
-            tempPO.setApplicationTime(resultSet.getString("applicationTime"));
+
+            String date = resultSet.getString("applicationTime");
+            tempPO.setApplicationTime(date.substring(0, date.length() - 2));
+
             tempPO.setState(resultSet.getString("state"));
             return tempPO;
         });

@@ -11,8 +11,9 @@ public class ShowPO {
     private String venueName;
     private String performer;
     private String showName;
+    private String photoSrc;  //图片路径
     private String showDate;
-    private double[] price;  //数据库中以varchar形式存储，数字之间以/隔开
+    private String price;  //数据库中以varchar形式存储，数字之间以/隔开
     private String description;
     private String state;
 
@@ -75,6 +76,14 @@ public class ShowPO {
         this.showName = showName;
     }
 
+    public String getPhotoSrc() {
+        return photoSrc;
+    }
+
+    public void setPhotoSrc(String photoSrc) {
+        this.photoSrc = photoSrc;
+    }
+
     public String getShowDate() {
         return showDate;
     }
@@ -83,11 +92,11 @@ public class ShowPO {
         this.showDate = showDate;
     }
 
-    public double[] getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double[] price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -117,8 +126,9 @@ public class ShowPO {
                 ", venueName='" + venueName + '\'' +
                 ", performer='" + performer + '\'' +
                 ", showName='" + showName + '\'' +
+                ", photoSrc='" + photoSrc + '\'' +
                 ", showDate='" + showDate + '\'' +
-                ", price=" + Arrays.toString(price) +
+                ", price=" + price +
                 ", description='" + description + '\'' +
                 ", state='" + state + '\'' +
                 '}';

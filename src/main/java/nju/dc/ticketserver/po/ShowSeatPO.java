@@ -5,12 +5,10 @@ public class ShowSeatPO {
 
     private String showID;
     private String venueID;
-    private String area;  // 如A/B/C/D
-    private int row;  //一共有几排
-
-    //记录每排的开始座位号，然后是该排的最大偏差
-    //如 A-01-01,100;A-02-01,100/B-03-01,200;B-04-01,200
-    private String seat;
+    private String area;  // 区域
+    private int row;  // 排号
+    private int seat; //座位号
+    private String state;
 
     public ShowSeatPO() {
     }
@@ -47,12 +45,20 @@ public class ShowSeatPO {
         this.row = row;
     }
 
-    public String getSeat() {
+    public int getSeat() {
         return seat;
     }
 
-    public void setSeat(String seat) {
+    public void setSeat(int seat) {
         this.seat = seat;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override
@@ -61,8 +67,9 @@ public class ShowSeatPO {
                 "showID='" + showID + '\'' +
                 ", venueID='" + venueID + '\'' +
                 ", area='" + area + '\'' +
-                ", row='" + row + '\'' +
-                ", seat='" + seat + '\'' +
+                ", row=" + row +
+                ", seat=" + seat +
+                ", state='" + state + '\'' +
                 '}';
     }
 }

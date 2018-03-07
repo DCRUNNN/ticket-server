@@ -12,13 +12,14 @@ public class OrderPO {
     private String username;
     private String venueID;
     private String showID;
-    private List<SeatPO> seatPOList = new ArrayList<>();  //数据库中以varchar形式存储
+    private String seat;  //数据库中以varchar形式存储
     private String purchaseMethod; //立即购买还是选座购买
     private int ticketsAmount;
     private String orderState;
     private String orderDate;
     private double totalPrice; //总价
     private double unitPrice; //一张票的单价
+    private double discount; //优惠
 
     public OrderPO() {
     }
@@ -63,12 +64,12 @@ public class OrderPO {
         this.showID = showID;
     }
 
-    public List<SeatPO> getSeatPOList() {
-        return seatPOList;
+    public String getSeat() {
+        return seat;
     }
 
-    public void setSeatPOList(List<SeatPO> seatPOList) {
-        this.seatPOList = seatPOList;
+    public void setSeat(String seat) {
+        this.seat = seat;
     }
 
     public String getPurchaseMethod() {
@@ -119,21 +120,30 @@ public class OrderPO {
         this.unitPrice = unitPrice;
     }
 
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
     @Override
     public String toString() {
         return "OrderPO{" +
                 "orderID='" + orderID + '\'' +
-                ", userID ='" + userID + '\'' +
+                ", userID='" + userID + '\'' +
                 ", username='" + username + '\'' +
                 ", venueID='" + venueID + '\'' +
                 ", showID='" + showID + '\'' +
-                ", seatPOList=" + seatPOList +
+                ", seat=" + seat +
                 ", purchaseMethod='" + purchaseMethod + '\'' +
                 ", ticketsAmount=" + ticketsAmount +
                 ", orderState='" + orderState + '\'' +
                 ", orderDate='" + orderDate + '\'' +
                 ", totalPrice=" + totalPrice +
                 ", unitPrice=" + unitPrice +
+                ", discount=" + discount +
                 '}';
     }
 }

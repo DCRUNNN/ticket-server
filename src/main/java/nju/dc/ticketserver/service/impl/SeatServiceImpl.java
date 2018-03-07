@@ -1,8 +1,11 @@
 package nju.dc.ticketserver.service.impl;
 
 import io.swagger.models.auth.In;
+import nju.dc.ticketserver.dao.SeatDao;
 import nju.dc.ticketserver.po.SeatPO;
+import nju.dc.ticketserver.po.ShowSeatPO;
 import nju.dc.ticketserver.service.SeatService;
+import nju.dc.ticketserver.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,14 +20,14 @@ import java.util.List;
 public class SeatServiceImpl implements SeatService {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private SeatDao seatDao;
 
     @Override
     public List<SeatPO> getVenueSeatPOs(String venueID) {
 
         List<SeatPO> seatPOList = new ArrayList<>();
 
-        String seat = getVenueSeatInfo(venueID);
+        String seat = seatDao.getVenueSeatInfo(venueID);
 
         String[] seatByArea = seat.split("/");
         for(int i=0;i<seatByArea.length;i++) {
@@ -45,24 +48,25 @@ public class SeatServiceImpl implements SeatService {
                 }
             }
         }
-        System.out.println(seatPOList.size());
 
-        System.out.println(seatPOList);
-
-        return null;
+        return seatPOList;
     }
 
-    private String getVenueSeatInfo(String venueID) {
-//        String sql = "select row,seat from seat where venueID = " + '"' + venueID + '"';
-//        RowMapper mapper = new RowMapper() {
-//            public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-//                return rs.getInt("row") + "#" + rs.getString("seat");
-//            }
-//        };
-//        return (String)jdbcTemplate.query(sql, mapper).get(0);
 
-        String sql = "select seat from seat where venueID = ? ";
-        return jdbcTemplate.queryForObject(sql, new Object[] { venueID }, String.class);
+    @Override
+    public List<ShowSeatPO> getShowSeatPOs(String showID) {
 
+        return seatDao.getShowSeatPOList(showID);
+
+    }
+
+    @Override
+    public String getShowAreaInfo(String showID) {
+        return seatDao.getShowAreaInfo(showID);
+    }
+
+    @Override
+    public boolean isSeatAvailable(SeatPO seatPO) {
+        return false;
     }
 }

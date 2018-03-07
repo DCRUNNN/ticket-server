@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Repository
 public class VenueDaoImpl implements VenueDao {
@@ -42,7 +43,8 @@ public class VenueDaoImpl implements VenueDao {
     }
 
     @Override
-    public int releaseShowPlan(ShowPO showPO, ShowSeatPO showSeatPO) {
+    public int releaseShowPlan(ShowPO showPO, List<ShowSeatPO> showSeatPOList) {
+
         String sql = "insert into show(showID,category,city,venueID,venueName,performer,showName,showDate,price,description,state) values "
                 + "("
                 + '"' + showPO.getShowID() + '"' + "," + '"' + showPO.getCategory() + '"' + "," + '"' + showPO.getCity() + '"' + "," + '"' + showPO.getVenueID() + '"'
@@ -50,14 +52,34 @@ public class VenueDaoImpl implements VenueDao {
                 + "," + '"' + showPO.getPrice() + '"' + "," + '"' + showPO.getDescription() + '"' + "," + '"' + showPO.getState() + '"'
                 + ")";
 
-        String sql2 = "insert into showSeat(showID,venueID,area,row,seat) values "
-                + "("
-                + '"' + showPO.getShowID() + '"' + "," + '"' + showPO.getVenueID() + '"' + "," + '"' + showSeatPO.getArea() + '"' + "," + '"' + showSeatPO.getRow() + '"' + "," + '"' + showSeatPO.getSeat() + '"'
-                + ")";
 
-        String[] sqls = new String[2];
+        //使用stringbuffer来优化，插入数据库时只执行一次插入，而不是多次插入
+        StringBuffer sql2 = new StringBuffer("insert into showSeat(showID,venueID,area,row,seat,state) values ");
+        for(int i=0;i<showSeatPOList.size()/2;i++) {
+            if (i != 0) {
+                sql2.append(",");
+            }
+            ShowSeatPO showSeatPO = showSeatPOList.get(i);
+            sql2.append("(" + '"' + showSeatPO.getShowID() + '"' + "," + '"' + showSeatPO.getVenueID() + '"' + "," + '"' + showSeatPO.getArea() + '"' + "," + '"' + showSeatPO.getRow() + '"'
+                    + "," + '"' + showSeatPO.getSeat() + '"' + "," + '"' + showSeatPO.getState() + '"'
+                    + ")");
+        }
+
+        StringBuffer sql3 = new StringBuffer("insert into showSeat(showID,venueID,area,row,seat,state) values ");
+        for(int j=showSeatPOList.size()/2;j<showSeatPOList.size();j++) {
+            if (j != showSeatPOList.size()/2) {
+                sql3.append(",");
+            }
+            ShowSeatPO showSeatPO = showSeatPOList.get(j);
+            sql3.append("(" + '"' + showSeatPO.getShowID() + '"' + "," + '"' + showSeatPO.getVenueID() + '"' + "," + '"' + showSeatPO.getArea() + '"' + "," + '"' + showSeatPO.getRow() + '"'
+                    + "," + '"' + showSeatPO.getSeat() + '"' + "," + '"' + showSeatPO.getState() + '"'
+                    + ")");
+        }
+
+        String[] sqls = new String[3];
         sqls[0] = sql;
-        sqls[1] = sql2;
+        sqls[1] = sql2.toString();
+        sqls[2] = sql3.toString();
 
         int[] check = jdbcTemplate.batchUpdate(sqls);
 
@@ -80,7 +102,10 @@ public class VenueDaoImpl implements VenueDao {
             tempPO.setRow(resultSet.getInt("row"));
             tempPO.setSeat(resultSet.getString("seat"));
             tempPO.setVenueInfo(resultSet.getString("venueInfo"));
-            tempPO.setRegDate(resultSet.getString("regDate"));
+
+            String date = resultSet.getString("regDate");
+            tempPO.setRegDate(date.substring(0, date.length() - 2));
+
             tempPO.setIncome(resultSet.getInt("income"));
             tempPO.setState(resultSet.getString("state"));
             return tempPO;
