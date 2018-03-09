@@ -1,7 +1,7 @@
 package nju.dc.ticketserver.service.impl;
 
 import nju.dc.ticketserver.dao.UserDao;
-import nju.dc.ticketserver.dao.utils.UserDaoUtils;
+import nju.dc.ticketserver.dao.utils.DaoUtils;
 import nju.dc.ticketserver.po.UserPO;
 import nju.dc.ticketserver.service.UserService;
 import nju.dc.ticketserver.utils.ActiveCodeHelper;
@@ -17,14 +17,14 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    private UserDaoUtils userDaoUtils;
+    private DaoUtils daoUtils;
 
     @Override
     public int addUser(UserPO userPO) {
         String password = userPO.getPassword();
         password = EncryptHelper.getShaEncryption(password);
         userPO.setPassword(password);
-        userPO.setUserID(userDaoUtils.createUserID());
+        userPO.setUserID(daoUtils.createUserID());
         return userDao.addUser(userPO);
     }
 
@@ -57,5 +57,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public int cancelVIP(String userID) {
         return userDao.cancelVIP(userID);
+    }
+
+    @Override
+    public double getUserTotalConsumption(String userID) {
+        return userDao.getUserTotalConsumption(userID);
+    }
+
+    @Override
+    public int setUserVIP(String userID, int vipLevel) {
+        return userDao.setUserVIP(userID, vipLevel);
     }
 }

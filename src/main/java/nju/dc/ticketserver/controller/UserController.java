@@ -1,11 +1,8 @@
 package nju.dc.ticketserver.controller;
 
-import nju.dc.ticketserver.dao.UserDao;
-import nju.dc.ticketserver.dao.utils.UserDaoUtils;
 import nju.dc.ticketserver.dto.BaseResult;
 import nju.dc.ticketserver.po.UserPO;
 import nju.dc.ticketserver.service.UserService;
-import nju.dc.ticketserver.utils.EncryptHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

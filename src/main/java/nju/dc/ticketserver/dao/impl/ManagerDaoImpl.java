@@ -3,6 +3,7 @@ package nju.dc.ticketserver.dao.impl;
 import nju.dc.ticketserver.dao.ManagerDao;
 import nju.dc.ticketserver.dao.VenueDao;
 import nju.dc.ticketserver.po.ModifyApplicationPO;
+import nju.dc.ticketserver.po.OrderPO;
 import nju.dc.ticketserver.po.RegApplicationPO;
 import nju.dc.ticketserver.po.VenuePO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +108,9 @@ public class ManagerDaoImpl implements ManagerDao {
         return po;
     }
 
-
+    @Override
+    public int giveMoneyToVenue(OrderPO orderPO) {
+        String sql = "";
+        return 0;
+    }
 }

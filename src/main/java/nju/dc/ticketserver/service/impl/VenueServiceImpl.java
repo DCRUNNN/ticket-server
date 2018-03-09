@@ -1,7 +1,7 @@
 package nju.dc.ticketserver.service.impl;
 
 import nju.dc.ticketserver.dao.VenueDao;
-import nju.dc.ticketserver.dao.utils.VenueDaoUtils;
+import nju.dc.ticketserver.dao.utils.DaoUtils;
 import nju.dc.ticketserver.po.*;
 import nju.dc.ticketserver.service.VenueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +16,13 @@ public class VenueServiceImpl implements VenueService {
     private VenueDao venueDao;
 
     @Autowired
-    private VenueDaoUtils venueDaoUtils;
+    private DaoUtils daoUtils;
 
     @Override
     public int applyRegVenue(RegApplicationPO regApplicationPO) {
-        String venueID = venueDaoUtils.createVenueID();
+        String venueID = daoUtils.createVenueID();
         regApplicationPO.setVenueID(venueID);
-        regApplicationPO.setApplicationTime(venueDaoUtils.setCreateDate());
+        regApplicationPO.setApplicationTime(daoUtils.setSignUpDate());
         regApplicationPO.setState("待审核");
 
         //处理area
@@ -32,7 +32,7 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     public int applyModifyVenueInfo(ModifyApplicationPO modifyApplicationPO) {
-        modifyApplicationPO.setApplicationTime(venueDaoUtils.setCreateDate());
+        modifyApplicationPO.setApplicationTime(daoUtils.setSignUpDate());
         modifyApplicationPO.setState("待审核");
 
         return venueDao.applyModifyVenueInfo(modifyApplicationPO);

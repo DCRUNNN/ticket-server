@@ -17,4 +17,8 @@ public interface UserDao {
     String getUsername(String userID);
 
     UserPO getUserPO(String username);
+
+    double getUserTotalConsumption(String userID);
+
+    int setUserVIP(String userID, int vipLevel);
 }

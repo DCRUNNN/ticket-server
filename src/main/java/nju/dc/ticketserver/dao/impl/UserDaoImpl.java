@@ -75,4 +75,16 @@ public class UserDaoImpl implements UserDao{
         });
         return po;
     }
+
+    @Override
+    public double getUserTotalConsumption(String userID) {
+        String sql = "select totalConsumption from user where userID = ? ";
+        return jdbcTemplate.queryForObject(sql, new Object[]{ userID }, Double.class);
+    }
+
+    @Override
+    public int setUserVIP(String userID, int vipLevel) {
+        String sql = "update user set vipLevel= " + vipLevel + " where userID = " + '"' + userID + '"';
+        return jdbcTemplate.update(sql);
+    }
 }

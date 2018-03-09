@@ -13,4 +13,8 @@ public interface UserService {
 
     int cancelVIP(String userID);
 
+    double getUserTotalConsumption(String userID);
+
+    int setUserVIP(String userID, int vipLevel);
+
 }

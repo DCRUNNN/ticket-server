@@ -1,9 +1,7 @@
 package nju.dc.ticketserver.dao.impl;
 
 import nju.dc.ticketserver.dao.OrderDao;
-import nju.dc.ticketserver.dao.utils.OrderDaoUtils;
 import nju.dc.ticketserver.po.OrderPO;
-import nju.dc.ticketserver.utils.VIPHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
