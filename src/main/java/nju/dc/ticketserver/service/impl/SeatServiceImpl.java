@@ -26,7 +26,6 @@ public class SeatServiceImpl implements SeatService {
     public List<SeatPO> getVenueSeatPOs(String venueID) {
 
         List<SeatPO> seatPOList = new ArrayList<>();
-
         String seat = seatDao.getVenueSeatInfo(venueID);
 
         String[] seatByArea = seat.split("/");

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface VenueService {
 
-    int applyRegVenue(RegApplicationPO regApplicationPO);
+    String applyRegVenue(RegApplicationPO regApplicationPO);
 
     int applyModifyVenueInfo(ModifyApplicationPO modifyApplicationPO);
 

@@ -71,11 +71,42 @@ public class UserDaoImpl implements UserDao{
             tempPO.setEmail(resultSet.getString("email"));
             tempPO.setVIP(resultSet.getBoolean("isVIP"));
             tempPO.setVipLevel(resultSet.getInt("vipLevel"));
+            tempPO.setState(resultSet.getString("state"));
+            tempPO.setActiveCode(resultSet.getString("activeCode"));
+            tempPO.setBalance(resultSet.getDouble("balance"));
+            tempPO.setTotalConsumption(resultSet.getDouble("totalConsumption"));
+
             return tempPO;
         });
         return po;
     }
 
+    @Override
+    public UserPO getUserPOByEmail(String email) {
+        String checkExistSql = "Select count(1) from user where email = " + '"' + email + '"';
+        int checkExists = jdbcTemplate.queryForObject(checkExistSql, new Object[]{}, Integer.class);
+        if (checkExists == 0) {
+            return null;
+        }
+
+        String sql = "Select * from user where email = " + '"' + email + '"';
+        UserPO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
+            UserPO tempPO = new UserPO();
+            tempPO.setUsername(resultSet.getString("username"));
+            tempPO.setUserID(resultSet.getString("userID"));
+            tempPO.setPassword(resultSet.getString("password"));
+            tempPO.setPhoneNumber(resultSet.getString("phoneNumber"));
+            tempPO.setEmail(resultSet.getString("email"));
+            tempPO.setVIP(resultSet.getBoolean("isVIP"));
+            tempPO.setVipLevel(resultSet.getInt("vipLevel"));
+            tempPO.setState(resultSet.getString("state"));
+            tempPO.setActiveCode(resultSet.getString("activeCode"));
+            tempPO.setBalance(resultSet.getDouble("balance"));
+            tempPO.setTotalConsumption(resultSet.getDouble("totalConsumption"));
+            return tempPO;
+        });
+        return po;
+    }
     @Override
     public double getUserTotalConsumption(String userID) {
         String sql = "select totalConsumption from user where userID = ? ";

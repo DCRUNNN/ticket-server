@@ -43,8 +43,10 @@ public class UserServiceImpl implements UserService {
         }
         //生成激活码
         String activeCode= ActiveCodeHelper.generateUniqueCode();
+
         userPO.setActiveCode(activeCode);
         userPO.setState("未激活");
+        userPO.setVIP(true);
 
         //保存成功则通过线程的方式给用户发送一封邮件
         if(addUser(userPO)>0){
@@ -66,6 +68,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int setUserVIP(String userID, int vipLevel) {
+
         return userDao.setUserVIP(userID, vipLevel);
+    }
+
+    @Override
+    public UserPO getUserPO(String username) {
+        return userDao.getUserPO(username);
+    }
+
+    @Override
+    public UserPO getUserPOByEmail(String email) {
+        return userDao.getUserPOByEmail(email);
     }
 }

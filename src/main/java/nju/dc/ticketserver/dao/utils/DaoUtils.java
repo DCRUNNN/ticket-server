@@ -53,9 +53,14 @@ public class DaoUtils {
     public String createVenueID(){
         String sql = "select count(*) as total from venue";
         int total = jdbcTemplate.query(sql, resultSet -> resultSet.next() ? resultSet.getInt("total") : 0);
-        return formatInteger((total + 1), 7);
-    }
 
+        String sql2 = "select count(*) as total2 from regApplication";
+        int total2 = jdbcTemplate.query(sql2, resultSet -> resultSet.next() ? resultSet.getInt("total2") : 0);
+
+        int result = total >= total2 ? total : total2;
+
+        return formatInteger((result + 1), 7);
+    }
 
     public String createTicketFinanceID(){
         String sql = "select count(*) as total from ticketsfinance";

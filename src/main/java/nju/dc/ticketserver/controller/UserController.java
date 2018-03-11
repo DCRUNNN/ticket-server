@@ -3,6 +3,7 @@ package nju.dc.ticketserver.controller;
 import nju.dc.ticketserver.dto.BaseResult;
 import nju.dc.ticketserver.po.UserPO;
 import nju.dc.ticketserver.service.UserService;
+import nju.dc.ticketserver.utils.EncryptHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,4 +35,23 @@ public class UserController {
         return result == 1 ? new BaseResult<>(0, "cancel VIP Successfully!") : new BaseResult<>(-1, "Fail to cancel VIP!");
     }
 
+    @GetMapping("/getUserPO/{username}")
+    public BaseResult getUserPO(@PathVariable String username) {
+        return new BaseResult<>(0, userService.getUserPO(username));
+    }
+
+    @PostMapping("/login")
+    public BaseResult login(@RequestBody UserPO userPO) {
+        UserPO checkUserPO = userService.getUserPOByEmail(userPO.getEmail());
+
+        if (checkUserPO == null) {
+            return new BaseResult(-1, "account not exists！");
+        }
+        boolean equal = EncryptHelper.checkPassword(userPO.getPassword(), checkUserPO.getPassword());
+        if (equal) {
+            return new BaseResult(0, checkUserPO);
+        }else{
+            return new BaseResult(2, "userName and password do not match!");
+        }
+    }
 }

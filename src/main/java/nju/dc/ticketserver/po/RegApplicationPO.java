@@ -12,8 +12,8 @@ public class RegApplicationPO {
     private String city;
     private String venueAddress;
     private String area;  // A/B/C
-    private int row;
-    private String seat;
+    private int row;  //共有多少排
+    private String seat; //如共3排，从低到高每排各有10,20,30个座位，请填写10/20/30
     private String venueInfo;
     private String applicationTime;
     private String state;

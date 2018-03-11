@@ -22,9 +22,9 @@ public class VenueController {
     public BaseResult applyRegVenue(@RequestBody RegApplicationPO regApplicationPO) {
 
         //处理area？
+        String venueID = venueService.applyRegVenue(regApplicationPO);
 
-        int result = venueService.applyRegVenue(regApplicationPO);
-        return result == 1 ? new BaseResult<>(0, "Venue Register Successfully!") : new BaseResult<>(-1, "Fail to register venue!");
+        return !venueID.equals("fail") ? new BaseResult<>(0, venueID) : new BaseResult<>(-1, "Fail to register venue!");
     }
 
     @PostMapping("/modifyVenueInfo")

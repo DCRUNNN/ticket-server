@@ -17,4 +17,7 @@ public interface UserService {
 
     int setUserVIP(String userID, int vipLevel);
 
+    UserPO getUserPO(String username);
+
+    UserPO getUserPOByEmail(String email);
 }
