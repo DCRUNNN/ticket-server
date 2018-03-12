@@ -24,15 +24,15 @@ public class ManagerDaoImpl implements ManagerDao {
 
         String sql = "insert into venue(venueID,venueName,city,address,area,row,seat,venueInfo,regDate,income,state) values "
                 + "("
-                + venueID + "," + '"' + regApplicationPO.getVenueName() + '"' + "," + '"' + regApplicationPO.getCity() + '"' + "," + '"' + regApplicationPO.getVenueAddress() + '"'
+                + '"' + venueID + '"' + "," + '"' + regApplicationPO.getVenueName() + '"' + "," + '"' + regApplicationPO.getCity() + '"' + "," + '"' + regApplicationPO.getVenueAddress() + '"'
                 + "," + '"' + regApplicationPO.getArea() + '"' + "," + '"' + regApplicationPO.getRow() + '"' + "," + '"' + regApplicationPO.getSeat() + '"'
                 + "," + '"' + regApplicationPO.getVenueInfo() + '"' + "," + '"' + regApplicationPO.getApplicationTime() + '"' + "," + 0
                 + "," + '"' + "注册成功" + '"'
                 + ")";
 
         String sql2 = "insert into seat(venueID,area,row,seat) values "
-                +"("
-                + venueID + "," + '"' + regApplicationPO.getArea() + '"' + "," + '"' + regApplicationPO.getRow() + '"' + "," + '"' + regApplicationPO.getSeat() + '"'
+                + "("
+                + '"' + venueID + '"' + "," + '"' + regApplicationPO.getArea() + '"' + "," + '"' + regApplicationPO.getRow() + '"' + "," + '"' + regApplicationPO.getSeat() + '"'
                 + ")";
 
         String sql3 = "update regApplication set state = " + '"' + "审核通过" + '"' + " where venueID = " + '"' + venueID + '"';

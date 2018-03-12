@@ -19,7 +19,7 @@ public class ShowDaoImpl implements ShowDao {
     @Override
     public ShowPO getShowPOByID(String showID) {
 
-        String sql = "Select * from show where showID = " + '"' + showID + '"';
+        String sql = "Select * from shows where showID = " + '"' + showID + '"';
         ShowPO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
             ShowPO tempPO = new ShowPO();
             tempPO.setShowID(showID);
@@ -42,7 +42,7 @@ public class ShowDaoImpl implements ShowDao {
     @Override
     public List<ShowPO> getShowPOByCategory(String category) {
 
-        String sql = "select * from show where category = " + '"' + category + '"';
+        String sql = "select * from shows where category = " + '"' + category + '"';
 
         List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
 
@@ -51,7 +51,7 @@ public class ShowDaoImpl implements ShowDao {
 
     @Override
     public List<ShowPO> getShowPOByCity(String city) {
-        String sql = "select * from show where city = " + '"' + city + '"';
+        String sql = "select * from shows where city = " + '"' + city + '"';
 
         List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
 
@@ -60,7 +60,7 @@ public class ShowDaoImpl implements ShowDao {
 
     @Override
     public List<ShowPO> getShowPOByVenue(String venue) {
-        String sql = "select * from show where venueName like " + "%" +  + '"' + venue + '"' + "%";
+        String sql = "select * from shows where venueName like " + "%" +  + '"' + venue + '"' + "%";
 
         List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
 
@@ -69,10 +69,17 @@ public class ShowDaoImpl implements ShowDao {
 
     @Override
     public List<ShowPO> getShowPOByPerformer(String performer) {
-        String sql = "select * from show where performer like " + "%" + '"' + performer + '"'+ "%";
+        String sql = "select * from shows where performer like " + "%" + '"' + performer + '"'+ "%";
 
         List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
 
+        return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
+    }
+
+    @Override
+    public List<ShowPO> getAllShowsPO() {
+        String sql = "select * from shows";
+        List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
         return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
     }
 

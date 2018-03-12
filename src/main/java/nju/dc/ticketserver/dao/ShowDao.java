@@ -16,4 +16,6 @@ public interface ShowDao {
 
     List<ShowPO> getShowPOByPerformer(String performer);
 
+    List<ShowPO> getAllShowsPO();
+
 }

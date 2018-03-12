@@ -21,7 +21,6 @@ public class DaoUtils {
      * @return
      */
     public String createUserID() {
-
         String sql = "select count(*) as total from user";
         int total = jdbcTemplate.query(sql, resultSet -> resultSet.next() ? resultSet.getInt("total") : 0);
         return "user-" + formatInteger((total + 1), 4);
@@ -66,6 +65,12 @@ public class DaoUtils {
         String sql = "select count(*) as total from ticketsfinance";
         int total = jdbcTemplate.query(sql, resultSet -> resultSet.next() ? resultSet.getInt("total") : 0);
         return new SimpleDateFormat("yyyyMMdd").format(Date.valueOf(LocalDate.now())) + "-" + formatInteger((total + 1), 6);
+    }
+
+    public String createShowID() {
+        String sql = "select count(*) as total from shows";
+        int total = jdbcTemplate.query(sql, resultSet -> resultSet.next() ? resultSet.getInt("total") : 0);
+        return "show-" + formatInteger((total + 1), 6);
     }
 
     /**

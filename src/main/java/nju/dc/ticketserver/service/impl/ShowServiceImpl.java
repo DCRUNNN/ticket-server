@@ -6,7 +6,10 @@ import nju.dc.ticketserver.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Target;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ShowServiceImpl implements ShowService {
@@ -38,5 +41,28 @@ public class ShowServiceImpl implements ShowService {
     public List<ShowPO> getShowPOByPerformer(String performer) {
         return showDao.getShowPOByPerformer(performer);
     }
+
+    @Override
+    public List<ShowPO> guessYouLike() {
+        List<ShowPO> showPOList = showDao.getAllShowsPO();
+        List<ShowPO> resultList = new ArrayList<>();
+        Random random = new Random();
+        boolean[] bool = new boolean[showPOList.size()];
+        int target = 0;
+        for (int i = 0; i < 6; i++) {
+            do {
+                target = random.nextInt(showPOList.size());
+            }while(bool[target]);
+            bool[target] = true;
+            resultList.add(showPOList.get(target));
+        }
+        return resultList;
+    }
+
+    @Override
+    public List<ShowPO> todayRecommend() {
+        return guessYouLike();
+    }
+
 
 }

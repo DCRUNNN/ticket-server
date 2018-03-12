@@ -16,4 +16,7 @@ public interface ShowService {
 
     List<ShowPO> getShowPOByPerformer(String performer);
 
+    List<ShowPO> guessYouLike();
+
+    List<ShowPO> todayRecommend();
 }
