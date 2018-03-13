@@ -12,6 +12,7 @@ public class OrderPO {
     private String username;
     private String venueID;
     private String showID;
+    private String showName;
     private String seat;  //数据库中以varchar形式存储
     private String purchaseMethod; //立即购买还是选座购买
     private int ticketsAmount;
@@ -62,6 +63,14 @@ public class OrderPO {
 
     public void setShowID(String showID) {
         this.showID = showID;
+    }
+
+    public String getShowName() {
+        return showName;
+    }
+
+    public void setShowName(String showName) {
+        this.showName = showName;
     }
 
     public String getSeat() {
@@ -136,7 +145,8 @@ public class OrderPO {
                 ", username='" + username + '\'' +
                 ", venueID='" + venueID + '\'' +
                 ", showID='" + showID + '\'' +
-                ", seat=" + seat +
+                ", showName='" + showName + '\'' +
+                ", seat='" + seat + '\'' +
                 ", purchaseMethod='" + purchaseMethod + '\'' +
                 ", ticketsAmount=" + ticketsAmount +
                 ", orderState='" + orderState + '\'' +

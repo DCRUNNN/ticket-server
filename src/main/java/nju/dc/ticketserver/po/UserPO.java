@@ -13,6 +13,7 @@ public class UserPO {
     private double totalConsumption; //总消费金额
     private String state; //未激活，激活
     private String activeCode; //激活码
+    private int memberPoints;  //会员积分
 
     public UserPO() {
 
@@ -106,6 +107,14 @@ public class UserPO {
         this.activeCode = activeCode;
     }
 
+    public int getMemberPoints() {
+        return memberPoints;
+    }
+
+    public void setMemberPoints(int memberPoints) {
+        this.memberPoints = memberPoints;
+    }
+
     @Override
     public String toString() {
         return "UserPO{" +
@@ -120,6 +129,7 @@ public class UserPO {
                 ", totalConsumption=" + totalConsumption +
                 ", state='" + state + '\'' +
                 ", activeCode='" + activeCode + '\'' +
+                ", memberPoints=" + memberPoints +
                 '}';
     }
 }

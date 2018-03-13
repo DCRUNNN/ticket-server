@@ -35,9 +35,14 @@ public class UserController {
         return result == 1 ? new BaseResult<>(0, "cancel VIP Successfully!") : new BaseResult<>(-1, "Fail to cancel VIP!");
     }
 
-    @GetMapping("/getUserPO/{username}")
-    public BaseResult getUserPO(@PathVariable String username) {
+    @GetMapping("/getUserPO")
+    public BaseResult getUserPO(@RequestParam String username) {
         return new BaseResult<>(0, userService.getUserPO(username));
+    }
+
+    @GetMapping("/getUserPOByUserID")
+    public BaseResult getUserPOByUserID(@RequestParam String userID) {
+        return new BaseResult<>(0, userService.getUserPOByUserID(userID));
     }
 
     @PostMapping("/login")

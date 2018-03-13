@@ -12,4 +12,6 @@ public interface OrderService {
     int createOrder(OrderPO orderPO);
 
     double getUserDiscount(String userID, int vipLevel);
+
+    List<OrderPO> getRecentOrders(String userID);
 }

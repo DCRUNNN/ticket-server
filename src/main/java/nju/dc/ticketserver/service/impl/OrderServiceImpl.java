@@ -45,4 +45,8 @@ public class OrderServiceImpl implements OrderService {
         return VIPHelper.getVIPDiscount(vipLevel);
     }
 
+    @Override
+    public List<OrderPO> getRecentOrders(String userID) {
+        return orderDao.getRecentOrders(userID);
+    }
 }

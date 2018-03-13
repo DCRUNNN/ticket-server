@@ -4,6 +4,7 @@ import nju.dc.ticketserver.dao.UserDao;
 import nju.dc.ticketserver.po.UserPO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,11 +15,11 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public int addUser(UserPO userPO) {
-        String sql = "insert into user(username,userID,password,email,isVIP,vipLevel,phoneNumber,balance,totalConsumption,state,activeCode) values "
+        String sql = "insert into user(username,userID,password,email,isVIP,vipLevel,phoneNumber,balance,totalConsumption,state,activeCode,memberPoints) values "
                 + "("
                 + '"' + userPO.getUsername() + '"'+ "," + '"' + userPO.getUserID() + '"' + "," + '"' + userPO.getPassword() + '"' + "," + '"' + userPO.getEmail() + '"'
                 + "," + userPO.isVIP() + "," + '"' + userPO.getVipLevel() + '"' + "," + '"' + userPO.getPhoneNumber() + '"' + "," + '"' +userPO.getBalance()+ '"'
-                + "," + '"'+ userPO.getTotalConsumption()+ '"' + "," + '"' +userPO.getState()+ '"' + "," + '"' +userPO.getActiveCode()+'"'
+                + "," + '"'+ userPO.getTotalConsumption()+ '"' + "," + '"' +userPO.getState()+ '"' + "," + '"' +userPO.getActiveCode()+'"'+","+'"'+userPO.getMemberPoints()+'"'
                 + ")";
         return jdbcTemplate.update(sql);
     }
@@ -62,22 +63,20 @@ public class UserDaoImpl implements UserDao{
         }
 
         String sql = "Select * from user where username = " + '"' + username + '"';
-        UserPO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
-            UserPO tempPO = new UserPO();
-            tempPO.setUsername(resultSet.getString("username"));
-            tempPO.setUserID(resultSet.getString("userID"));
-            tempPO.setPassword(resultSet.getString("password"));
-            tempPO.setPhoneNumber(resultSet.getString("phoneNumber"));
-            tempPO.setEmail(resultSet.getString("email"));
-            tempPO.setVIP(resultSet.getBoolean("isVIP"));
-            tempPO.setVipLevel(resultSet.getInt("vipLevel"));
-            tempPO.setState(resultSet.getString("state"));
-            tempPO.setActiveCode(resultSet.getString("activeCode"));
-            tempPO.setBalance(resultSet.getDouble("balance"));
-            tempPO.setTotalConsumption(resultSet.getDouble("totalConsumption"));
+        UserPO po = jdbcTemplate.queryForObject(sql, getUserPOMapper());
+        return po;
+    }
 
-            return tempPO;
-        });
+    @Override
+    public UserPO getUserPOByUserID(String userID) {
+        String checkExistSql = "Select count(1) from user where userID = " + '"' + userID + '"';
+        int checkExists = jdbcTemplate.queryForObject(checkExistSql, new Object[]{}, Integer.class);
+        if (checkExists == 0) {
+            return null;
+        }
+
+        String sql = "Select * from user where userID = " + '"' + userID + '"';
+        UserPO po = jdbcTemplate.queryForObject(sql, getUserPOMapper());
         return po;
     }
 
@@ -90,21 +89,7 @@ public class UserDaoImpl implements UserDao{
         }
 
         String sql = "Select * from user where email = " + '"' + email + '"';
-        UserPO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
-            UserPO tempPO = new UserPO();
-            tempPO.setUsername(resultSet.getString("username"));
-            tempPO.setUserID(resultSet.getString("userID"));
-            tempPO.setPassword(resultSet.getString("password"));
-            tempPO.setPhoneNumber(resultSet.getString("phoneNumber"));
-            tempPO.setEmail(resultSet.getString("email"));
-            tempPO.setVIP(resultSet.getBoolean("isVIP"));
-            tempPO.setVipLevel(resultSet.getInt("vipLevel"));
-            tempPO.setState(resultSet.getString("state"));
-            tempPO.setActiveCode(resultSet.getString("activeCode"));
-            tempPO.setBalance(resultSet.getDouble("balance"));
-            tempPO.setTotalConsumption(resultSet.getDouble("totalConsumption"));
-            return tempPO;
-        });
+        UserPO po = jdbcTemplate.queryForObject(sql, getUserPOMapper());
         return po;
     }
     @Override
@@ -117,5 +102,24 @@ public class UserDaoImpl implements UserDao{
     public int setUserVIP(String userID, int vipLevel) {
         String sql = "update user set vipLevel= " + vipLevel + " where userID = " + '"' + userID + '"';
         return jdbcTemplate.update(sql);
+    }
+
+    private RowMapper<UserPO> getUserPOMapper() {
+        return (resultSet, i) -> {
+            UserPO po = new UserPO();
+            po.setUsername(resultSet.getString("username"));
+            po.setUserID(resultSet.getString("userID"));
+            po.setPassword(resultSet.getString("password"));
+            po.setPhoneNumber(resultSet.getString("phoneNumber"));
+            po.setEmail(resultSet.getString("email"));
+            po.setVIP(resultSet.getBoolean("isVIP"));
+            po.setVipLevel(resultSet.getInt("vipLevel"));
+            po.setState(resultSet.getString("state"));
+            po.setActiveCode(resultSet.getString("activeCode"));
+            po.setBalance(resultSet.getDouble("balance"));
+            po.setTotalConsumption(resultSet.getDouble("totalConsumption"));
+            po.setMemberPoints(resultSet.getInt("memberPoints"));
+            return po;
+        };
     }
 }

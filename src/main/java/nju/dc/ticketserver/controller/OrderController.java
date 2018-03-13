@@ -29,6 +29,10 @@ public class OrderController {
         return new BaseResult<>(0, orderService.getUserDiscount(userID, vipLevel));
     }
 
+    @GetMapping("/getRecentOrders")
+    public BaseResult getRecentOrders(@RequestParam String userID){
+        return new BaseResult(0, orderService.getRecentOrders(userID));
+    }
 
 
 }

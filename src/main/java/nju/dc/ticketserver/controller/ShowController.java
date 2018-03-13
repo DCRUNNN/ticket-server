@@ -41,7 +41,6 @@ public class ShowController {
     @GetMapping("/guessYouLike")
     public BaseResult guessYouLike(){
         return new BaseResult<>(0, showService.guessYouLike());
-
     }
 
     @GetMapping("/todayRecommend")

@@ -18,6 +18,8 @@ public interface UserDao {
 
     UserPO getUserPO(String username);
 
+    UserPO getUserPOByUserID(String userID);
+
     UserPO getUserPOByEmail(String email);
 
     double getUserTotalConsumption(String userID);

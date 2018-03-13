@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
         userPO.setActiveCode(activeCode);
         userPO.setState("未激活");
         userPO.setVIP(true);
+        userPO.setMemberPoints(0);
 
         //保存成功则通过线程的方式给用户发送一封邮件
         if(addUser(userPO)>0){
@@ -80,5 +81,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserPO getUserPOByEmail(String email) {
         return userDao.getUserPOByEmail(email);
+    }
+
+    @Override
+    public UserPO getUserPOByUserID(String userID) {
+        return userDao.getUserPOByUserID(userID);
     }
 }

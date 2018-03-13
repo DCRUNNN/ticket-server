@@ -20,4 +20,6 @@ public interface UserService {
     UserPO getUserPO(String username);
 
     UserPO getUserPOByEmail(String email);
+
+    UserPO getUserPOByUserID(String userID);
 }
