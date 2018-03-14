@@ -6,6 +6,7 @@ public class VenuePO {
 
     private String venueName;
     private String venueID;
+    private String password; //场馆登录密码
     private String city;
     private String address;
     private String area; //区域 数据库中以varchar形式存储，以/隔开
@@ -33,6 +34,14 @@ public class VenuePO {
 
     public void setVenueID(String venueID) {
         this.venueID = venueID;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCity() {
@@ -112,9 +121,10 @@ public class VenuePO {
         return "VenuePO{" +
                 "venueName='" + venueName + '\'' +
                 ", venueID='" + venueID + '\'' +
+                ", password='" + password + '\'' +
                 ", city='" + city + '\'' +
                 ", address='" + address + '\'' +
-                ", area=" + area +
+                ", area='" + area + '\'' +
                 ", row=" + row +
                 ", seat='" + seat + '\'' +
                 ", venueInfo='" + venueInfo + '\'' +

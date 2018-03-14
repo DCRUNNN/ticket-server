@@ -87,4 +87,22 @@ public class UserServiceImpl implements UserService {
     public UserPO getUserPOByUserID(String userID) {
         return userDao.getUserPOByUserID(userID);
     }
+
+    @Override
+    public UserPO modifyUserPO(String userID, String username, String phoneNumber) {
+        return userDao.modifyUserPO(userID, username, phoneNumber);
+    }
+
+    @Override
+    public int modifyUserPassword(String userID, String previousPassword, String newPassword) {
+
+        UserPO checkUserPO = getUserPOByUserID(userID);
+        boolean equal = EncryptHelper.checkPassword(previousPassword, checkUserPO.getPassword());
+        if(equal){
+            newPassword = EncryptHelper.getShaEncryption(newPassword);
+            return userDao.modifyPassword(userID, newPassword);
+        }else{
+            return -1;
+        }
+    }
 }

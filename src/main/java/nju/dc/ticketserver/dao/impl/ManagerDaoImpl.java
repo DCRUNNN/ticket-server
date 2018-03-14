@@ -22,9 +22,9 @@ public class ManagerDaoImpl implements ManagerDao {
     public int confirmRegVenue(String venueID) {
         RegApplicationPO regApplicationPO = getRegApplicationPO(venueID);
 
-        String sql = "insert into venue(venueID,venueName,city,address,area,row,seat,venueInfo,regDate,income,state) values "
+        String sql = "insert into venue(venueID,venueName,password,city,address,area,row,seat,venueInfo,regDate,income,state) values "
                 + "("
-                + '"' + venueID + '"' + "," + '"' + regApplicationPO.getVenueName() + '"' + "," + '"' + regApplicationPO.getCity() + '"' + "," + '"' + regApplicationPO.getVenueAddress() + '"'
+                + '"' + venueID + '"' + "," + '"' + regApplicationPO.getVenueName() + '"' + "," + '"' + regApplicationPO.getPassword() + '"' + "," + '"' + regApplicationPO.getCity() + '"' + "," + '"' + regApplicationPO.getVenueAddress() + '"'
                 + "," + '"' + regApplicationPO.getArea() + '"' + "," + '"' + regApplicationPO.getRow() + '"' + "," + '"' + regApplicationPO.getSeat() + '"'
                 + "," + '"' + regApplicationPO.getVenueInfo() + '"' + "," + '"' + regApplicationPO.getApplicationTime() + '"' + "," + 0
                 + "," + '"' + "注册成功" + '"'
@@ -78,6 +78,7 @@ public class ManagerDaoImpl implements ManagerDao {
             RegApplicationPO tempPO = new RegApplicationPO();
             tempPO.setVenueID(venueID);
             tempPO.setVenueName(resultSet.getString("venueName"));
+            tempPO.setPassword(resultSet.getString("password"));
             tempPO.setCity(resultSet.getString("city"));
             tempPO.setVenueAddress(resultSet.getString("venueAddress"));
             tempPO.setArea(resultSet.getString("area"));

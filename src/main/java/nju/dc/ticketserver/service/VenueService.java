@@ -12,4 +12,5 @@ public interface VenueService {
 
     int releaseShowPlan(ShowPO showPO, List<ShowSeatPO> showSeatPOList);
 
+    VenuePO getVenuePO(String venueID);
 }

@@ -19,10 +19,10 @@ public class VenueDaoImpl implements VenueDao {
     @Override
     public int applyRegVenue(RegApplicationPO regApplicationPO) {
 
-        String sql = "insert into regApplication(venueID,venueName,city,venueAddress,area,row,seat,venueInfo,applicationTime,state) values "
+        String sql = "insert into regApplication(venueID,venueName,city,password,venueAddress,area,row,seat,venueInfo,applicationTime,state) values "
                 + "("
-                + '"' + regApplicationPO.getVenueID() + '"' + "," + '"' + regApplicationPO.getVenueName() + '"' + "," + '"' + regApplicationPO.getCity() + '"' + "," + '"' + regApplicationPO.getVenueAddress() + '"'
-                + "," + '"' + regApplicationPO.getArea() + '"' + "," + '"' + regApplicationPO.getRow() + '"' + "," + '"' + regApplicationPO.getSeat() + '"' + "," + '"' + regApplicationPO.getVenueInfo() + '"' + "," + '"' + regApplicationPO.getApplicationTime() + '"' + "," +  '"' + regApplicationPO.getState() + '"'
+                + '"' + regApplicationPO.getVenueID() + '"' + "," + '"' + regApplicationPO.getVenueName() + '"' + "," + '"' + regApplicationPO.getCity() + '"' + "," + '"' + regApplicationPO.getPassword() + '"' + "," + '"' + regApplicationPO.getVenueAddress() + '"'
+                + "," + '"' + regApplicationPO.getArea() + '"' + "," + '"' + regApplicationPO.getRow() + '"' + "," + '"' + regApplicationPO.getSeat() + '"' + "," + '"' + regApplicationPO.getVenueInfo() + '"' + "," + '"' + regApplicationPO.getApplicationTime() + '"' + "," + '"' + regApplicationPO.getState() + '"'
                 + ")";
         return jdbcTemplate.update(sql);
     }
@@ -97,6 +97,7 @@ public class VenueDaoImpl implements VenueDao {
             tempPO.setVenueID(venueID);
             tempPO.setVenueName(resultSet.getString("venueName"));
             tempPO.setCity(resultSet.getString("city"));
+            tempPO.setPassword(resultSet.getString("password"));
             tempPO.setAddress(resultSet.getString("address"));
             tempPO.setArea(resultSet.getString("area"));
             tempPO.setRow(resultSet.getInt("row"));

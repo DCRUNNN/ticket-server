@@ -104,6 +104,19 @@ public class UserDaoImpl implements UserDao{
         return jdbcTemplate.update(sql);
     }
 
+    @Override
+    public UserPO modifyUserPO(String userID, String username, String phoneNumber) {
+        String sql = "update user set username = " + '"' + username + '"' + "," + " phoneNumber = " + '"' + phoneNumber + '"' + " where userID=" + '"' + userID + '"';
+        int success = jdbcTemplate.update(sql);
+        return success == 1 ? getUserPOByUserID(userID) : null;
+    }
+
+    @Override
+    public int modifyPassword(String userID, String newPassword) {
+        String sql = "update user set password = " + '"' + newPassword + '"' + " where userID = " + '"' + userID + '"';
+        return jdbcTemplate.update(sql);
+    }
+
     private RowMapper<UserPO> getUserPOMapper() {
         return (resultSet, i) -> {
             UserPO po = new UserPO();

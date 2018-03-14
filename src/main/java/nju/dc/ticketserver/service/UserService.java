@@ -22,4 +22,8 @@ public interface UserService {
     UserPO getUserPOByEmail(String email);
 
     UserPO getUserPOByUserID(String userID);
+
+    UserPO modifyUserPO(String userID, String username, String phoneNumber);
+
+    int modifyUserPassword(String userID, String previousPassword, String newPassword);
 }

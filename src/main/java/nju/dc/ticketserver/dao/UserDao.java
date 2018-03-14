@@ -25,4 +25,9 @@ public interface UserDao {
     double getUserTotalConsumption(String userID);
 
     int setUserVIP(String userID, int vipLevel);
+
+    UserPO modifyUserPO(String userID, String username, String phoneNumber);
+
+    int modifyPassword(String userID, String newPassword);
+
 }

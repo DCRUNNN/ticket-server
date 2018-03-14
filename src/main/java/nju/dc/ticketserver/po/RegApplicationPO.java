@@ -10,6 +10,7 @@ public class RegApplicationPO {
     private String venueName;
     private String venueID;
     private String city;
+    private String password;
     private String venueAddress;
     private String area;  // A/B/C
     private int row;  //共有多少排
@@ -43,6 +44,14 @@ public class RegApplicationPO {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getVenueAddress() {
@@ -107,8 +116,9 @@ public class RegApplicationPO {
                 "venueName='" + venueName + '\'' +
                 ", venueID='" + venueID + '\'' +
                 ", city='" + city + '\'' +
+                ", password='" + password + '\'' +
                 ", venueAddress='" + venueAddress + '\'' +
-                ", area=" + area +
+                ", area='" + area + '\'' +
                 ", row=" + row +
                 ", seat='" + seat + '\'' +
                 ", venueInfo='" + venueInfo + '\'' +

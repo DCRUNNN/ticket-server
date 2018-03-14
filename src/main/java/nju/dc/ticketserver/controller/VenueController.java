@@ -5,6 +5,7 @@ import nju.dc.ticketserver.dto.BaseResult;
 import nju.dc.ticketserver.po.*;
 import nju.dc.ticketserver.service.SeatService;
 import nju.dc.ticketserver.service.VenueService;
+import nju.dc.ticketserver.utils.EncryptHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,11 +42,34 @@ public class VenueController {
     }
 
     @PostMapping("/releaseShowPlan")
-    public BaseResult releaseShowPlan(@RequestBody ShowPO showPO, @RequestParam String area, @RequestParam int row, @RequestParam String seatInfo) {
+    public BaseResult releaseShowPlan(@RequestBody ReleaseShowPlanPO releaseShowPlanPO) {
+        ShowPO showPO = releaseShowPlanPO.getShowPO();
         showPO.setShowID(daoUtils.createShowID());
+        showPO.setState("售票中");
 
-        List<ShowSeatPO> showSeatPOList = seatService.convertShowSeatInfo(showPO, area, row, seatInfo);
+        List<ShowSeatPO> showSeatPOList = seatService.convertShowSeatInfo(showPO, releaseShowPlanPO.getArea(), releaseShowPlanPO.getRow(), releaseShowPlanPO.getSeatInfo());
+
         int result = venueService.releaseShowPlan(showPO, showSeatPOList);
         return result > 0 ? new BaseResult<>(0, "Release Show Plan Successfully!") : new BaseResult<>(-1, "Fail to release show plan!");
     }
+
+    @PostMapping("/login")
+    public BaseResult venueLogin(@RequestBody VenuePO venuePO) {
+        VenuePO checkVenuePO = venueService.getVenuePO(venuePO.getVenueID());
+        if (checkVenuePO == null) {
+            return new BaseResult(-1, "account not exists！");
+        }
+        boolean equal = EncryptHelper.checkPassword(venuePO.getPassword(), checkVenuePO.getPassword());
+        if (equal) {
+            return new BaseResult(0, checkVenuePO);
+        }else{
+            return new BaseResult(2, "userName and password do not match!");
+        }
+    }
+
+    @GetMapping("/getVenuePO")
+    public BaseResult getVenuePO(@RequestParam String venueID) {
+        return new BaseResult<>(0, venueService.getVenuePO(venueID));
+    }
+
 }

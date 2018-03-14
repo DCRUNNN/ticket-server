@@ -5,6 +5,7 @@ import nju.dc.ticketserver.dao.utils.DaoUtils;
 import nju.dc.ticketserver.po.*;
 import nju.dc.ticketserver.service.SeatService;
 import nju.dc.ticketserver.service.VenueService;
+import nju.dc.ticketserver.utils.EncryptHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class VenueServiceImpl implements VenueService {
     public String applyRegVenue(RegApplicationPO regApplicationPO) {
         String venueID = daoUtils.createVenueID();
         regApplicationPO.setVenueID(venueID);
+
+        regApplicationPO.setPassword(EncryptHelper.getShaEncryption(regApplicationPO.getPassword()));
+
         regApplicationPO.setApplicationTime(daoUtils.setSignUpDate());
         regApplicationPO.setState("待审核");
 
@@ -48,6 +52,11 @@ public class VenueServiceImpl implements VenueService {
     @Override
     public int releaseShowPlan(ShowPO showPO, List<ShowSeatPO> showSeatPOList) {
         return venueDao.releaseShowPlan(showPO, showSeatPOList);
+    }
+
+    @Override
+    public VenuePO getVenuePO(String venueID) {
+        return venueDao.getVenuePO(venueID);
     }
 
 }

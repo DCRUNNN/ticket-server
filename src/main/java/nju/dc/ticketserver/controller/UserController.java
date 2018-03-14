@@ -59,4 +59,26 @@ public class UserController {
             return new BaseResult(2, "userName and password do not match!");
         }
     }
+
+    @GetMapping("/modifyUserInfo")
+    public BaseResult modifyUserInfo(@RequestParam String userID,@RequestParam String username,@RequestParam String phoneNumber){
+        UserPO checkUserPO = userService.getUserPO(username);
+        if (checkUserPO != null && !checkUserPO.getUserID().equals(userID)) {
+            return new BaseResult(-1, "用户名已存在");
+        }else{
+            return new BaseResult<>(0,userService.modifyUserPO(userID, username, phoneNumber));
+        }
+    }
+
+    @GetMapping("/modifyUserPassword")
+    public BaseResult modifyUserPassword(@RequestParam String userID,@RequestParam String previousPassword, @RequestParam String newPassword){
+        int result = userService.modifyUserPassword(userID, previousPassword, newPassword);
+        if (result == 1) {
+            return new BaseResult<>(0, "Modify Password Successfully!");
+        }else if(result==-1){
+            return new BaseResult<>(-1, "当前密码输入不正确!");
+        }else{
+            return new BaseResult<>(-2, "修改密码失败");
+        }
+    }
 }
