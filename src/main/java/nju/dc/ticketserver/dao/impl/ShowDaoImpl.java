@@ -83,6 +83,20 @@ public class ShowDaoImpl implements ShowDao {
         return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
     }
 
+    @Override
+    public List<String> getAllCities() {
+        String sql = "select distinct city from shows";
+        List<String> allCities = jdbcTemplate.queryForList(sql, String.class);
+        return allCities.size() == 0 ? new ArrayList<>() : allCities;
+    }
+
+    @Override
+    public List<ShowPO> getShowPOByCityAndCategory(String city, String category) {
+        String sql = "select * from shows where city = " + '"' + city + '"' + " and category = " + '"' + category + '"';
+        List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
+        return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
+    }
+
     private RowMapper<ShowPO> getShowPOMapper() {
         return (resultSet, i) -> {
             ShowPO po = new ShowPO();

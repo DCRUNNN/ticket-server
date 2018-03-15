@@ -39,13 +39,23 @@ public class ShowController {
     }
 
     @GetMapping("/guessYouLike")
-    public BaseResult guessYouLike(){
+    public BaseResult guessYouLike() {
         return new BaseResult<>(0, showService.guessYouLike());
     }
 
     @GetMapping("/todayRecommend")
-    public BaseResult todayRecommend(){
+    public BaseResult todayRecommend() {
         return new BaseResult<>(0, showService.todayRecommend());
-
     }
+
+    @GetMapping("/allCities")
+    public BaseResult getAllCities(){
+        return new BaseResult<>(0, showService.getAllCities());
+    }
+
+    @GetMapping("/getShowPOByCityAndCategory")
+    public BaseResult getShowPOByCityAndCategory(@RequestParam String city, @RequestParam String category) {
+        return new BaseResult(0, showService.getShowPOByCityAndCategory(city, category));
+    }
+
 }

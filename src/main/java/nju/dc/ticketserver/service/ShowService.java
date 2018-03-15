@@ -16,7 +16,13 @@ public interface ShowService {
 
     List<ShowPO> getShowPOByPerformer(String performer);
 
+    List<ShowPO> getShowPOByCityAndCategory(String city, String category);
+
     List<ShowPO> guessYouLike();
 
     List<ShowPO> todayRecommend();
+
+    List<String> getAllCities();
+
+
 }

@@ -2,15 +2,15 @@ package nju.dc.ticketserver.dao.impl;
 
 import nju.dc.ticketserver.dao.ManagerDao;
 import nju.dc.ticketserver.dao.VenueDao;
-import nju.dc.ticketserver.po.ModifyApplicationPO;
-import nju.dc.ticketserver.po.OrderPO;
-import nju.dc.ticketserver.po.RegApplicationPO;
-import nju.dc.ticketserver.po.VenuePO;
+import nju.dc.ticketserver.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Repository
 public class ManagerDaoImpl implements ManagerDao {
@@ -56,7 +56,7 @@ public class ManagerDaoImpl implements ManagerDao {
         VenuePO venuePO = getPostVenuePO(venueID);
 
         String sql = "update venue set venueName = " + '"' + venuePO.getVenueName() + '"' + "," + "address = " + '"' + venuePO.getAddress() + '"'
-                + "," + "area = " + '"' + venuePO.getArea() + '"' + "," + "venueInfo = " + '"' + venuePO.getVenueInfo() + '"';
+                + "," + "venueInfo = " + '"' + venuePO.getVenueInfo() + '"' + " where venueID = " + '"' + venueID + '"';
 
         String sql2 = "update modifyApplication set state = " + '"' + "审核通过" + '"' + " where venueID = " + '"' + venueID + '"';
 
@@ -96,7 +96,7 @@ public class ManagerDaoImpl implements ManagerDao {
     }
 
     private VenuePO getPostVenuePO(String venueID) {
-        String sql = "Select * from modifyApplication where venueID = " + '"' + venueID + '"';
+        String sql = "Select * from modifyApplication where venueID = " + '"' + venueID + '"' + " and state = " + '"' + "待审核" + '"';
         VenuePO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
             VenuePO tempPO = new VenuePO();
             tempPO.setVenueID(venueID);
@@ -112,6 +112,87 @@ public class ManagerDaoImpl implements ManagerDao {
     @Override
     public int giveMoneyToVenue(OrderPO orderPO) {
         String sql = "";
+        System.out.println(getPostVenuePO("0000001"));
+
         return 0;
     }
+
+    @Override
+    public ManagerPO getManagerPO(String email) {
+        String sql = "Select * from manager where email = " + '"' + email + '"';
+        ManagerPO po = jdbcTemplate.queryForObject(sql, getManagerPOMapper());
+        return po;
+    }
+
+    @Override
+    public List<RegApplicationPO> getVenueRegApplicationPOs() {
+        String sql = "select * from regApplication";
+        List<RegApplicationPO> regApplicationPOList = jdbcTemplate.query(sql, getVenueRegApplicationPOMapper());
+        return regApplicationPOList.size() == 0 ? new ArrayList<>() : regApplicationPOList;
+    }
+
+    @Override
+    public List<ModifyApplicationPO> getVenueModifyApplicationPOs() {
+        String sql = "select * from modifyApplication";
+        List<ModifyApplicationPO> modifyApplicationPOList = jdbcTemplate.query(sql, getVenueModifyApplicationPOMapper());
+        return modifyApplicationPOList.size() == 0 ? new ArrayList<>() : modifyApplicationPOList;
+    }
+
+    private RowMapper<ManagerPO> getManagerPOMapper() {
+        return (resultSet, i) -> {
+            ManagerPO po = new ManagerPO();
+            po.setName(resultSet.getString("name"));
+            po.setEmail(resultSet.getString("email"));
+            po.setPassword(resultSet.getString("password"));
+            po.setPaymentRatio(resultSet.getDouble("paymentRatio"));
+            return po;
+        };
+    }
+
+    private RowMapper<RegApplicationPO> getVenueRegApplicationPOMapper(){
+        return (resultSet, i) -> {
+            RegApplicationPO po = new RegApplicationPO();
+            po.setVenueID(resultSet.getString("venueID"));
+            po.setVenueName(resultSet.getString("venueName"));
+            po.setCity(resultSet.getString("city"));
+            po.setPassword(resultSet.getString("password"));
+
+            po.setVenueAddress(resultSet.getString("venueAddress"));
+            po.setArea(resultSet.getString("area"));
+            po.setRow(resultSet.getInt("row"));
+            po.setSeat(resultSet.getString("seat"));
+            po.setVenueInfo(resultSet.getString("venueInfo"));
+
+            String date = resultSet.getString("applicationTime");
+            po.setApplicationTime(date.substring(0, date.length() - 2));
+            po.setState(resultSet.getString("state"));
+            return po;
+        };
+    }
+
+    private RowMapper<ModifyApplicationPO> getVenueModifyApplicationPOMapper() {
+        return (resultSet, i) -> {
+            ModifyApplicationPO po = new ModifyApplicationPO();
+            VenuePO preVenuePO = new VenuePO();
+            VenuePO postVenuePO = new VenuePO();
+
+            preVenuePO.setVenueName(resultSet.getString("preVenueName"));
+            preVenuePO.setAddress(resultSet.getString("preAddress"));
+            preVenuePO.setVenueInfo(resultSet.getString("preVenueInfo"));
+
+            postVenuePO.setVenueName(resultSet.getString("postVenueName"));
+            postVenuePO.setAddress(resultSet.getString("postAddress"));
+            postVenuePO.setVenueInfo(resultSet.getString("postVenueInfo"));
+
+            po.setVenueID(resultSet.getString("venueID"));
+            po.setState(resultSet.getString("state"));
+
+            String date = resultSet.getString("applicationTime");
+            po.setApplicationTime(date.substring(0, date.length() - 2));
+            po.setPreVenuePO(preVenuePO);
+            po.setPostVenuePO(postVenuePO);
+            return po;
+        };
+    }
+
 }

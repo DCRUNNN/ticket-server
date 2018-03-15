@@ -65,4 +65,13 @@ public class ShowServiceImpl implements ShowService {
     }
 
 
+    @Override
+    public List<String> getAllCities() {
+        return showDao.getAllCities();
+    }
+
+    @Override
+    public List<ShowPO> getShowPOByCityAndCategory(String city, String category) {
+        return showDao.getShowPOByCityAndCategory(city, category);
+    }
 }

@@ -16,6 +16,10 @@ public interface ShowDao {
 
     List<ShowPO> getShowPOByPerformer(String performer);
 
+    List<ShowPO> getShowPOByCityAndCategory(String city, String category);
+
     List<ShowPO> getAllShowsPO();
+
+    List<String> getAllCities();
 
 }

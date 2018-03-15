@@ -36,7 +36,7 @@ public class VenueDaoImpl implements VenueDao {
         String sql = "insert into modifyApplication(preVenueName,postVenueName,venueID,preAddress,postAddress,preVenueInfo,postVenueInfo,state,applicationTime) values "
                 + "("
                 + '"' + preVenuePO.getVenueName() + '"' + "," + '"' + postVenuePO.getVenueName() + '"' + "," + '"' + preVenuePO.getVenueID() + '"' + "," + '"' + preVenuePO.getAddress() + '"'
-                + "," + '"' + postVenuePO.getAddress() + '"' + "," + '"' + preVenuePO.getVenueInfo() + '"' + "," + '"' + postVenuePO.getVenueInfo() + '"' + "," + "待审核"
+                + "," + '"' + postVenuePO.getAddress() + '"' + "," + '"' + preVenuePO.getVenueInfo() + '"' + "," + '"' + postVenuePO.getVenueInfo() + '"' + "," +'"'+"待审核"+'"'
                 + "," + '"' + venuePO.getApplicationTime() + '"'
                 + ")";
         return jdbcTemplate.update(sql);

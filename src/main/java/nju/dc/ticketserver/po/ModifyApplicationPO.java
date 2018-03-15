@@ -7,8 +7,17 @@ public class ModifyApplicationPO {
     private VenuePO postVenuePO; //修改后
     private String applicationTime;
     private String state;
+    private String venueID;
 
     public ModifyApplicationPO() {
+    }
+
+    public String getVenueID() {
+        return venueID;
+    }
+
+    public void setVenueID(String venueID) {
+        this.venueID = venueID;
     }
 
     public VenuePO getPreVenuePO() {
@@ -50,6 +59,7 @@ public class ModifyApplicationPO {
                 ", postVenuePO=" + postVenuePO +
                 ", applicationTime='" + applicationTime + '\'' +
                 ", state='" + state + '\'' +
+                ", venueID='" + venueID + '\'' +
                 '}';
     }
 }
