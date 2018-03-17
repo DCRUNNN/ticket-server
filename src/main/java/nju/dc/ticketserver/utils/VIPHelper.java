@@ -34,6 +34,23 @@ public class VIPHelper {
         }
     }
 
+    public static int getVIPMemberPoints(int vipLevel, double totalPrice) {
+        if(vipLevel==1){
+            return (int) (totalPrice * 0.2);
+        }else if(vipLevel == 2 ){
+            return (int) (totalPrice * 0.25);
+        } else if (vipLevel == 3) {
+            return (int) (totalPrice * 0.3);
+        } else if (vipLevel == 4) {
+            return (int) (totalPrice * 0.4);
+        } else if (vipLevel == 5) {
+            return (int) (totalPrice * 0.5);
+        } else {
+            return (int) (totalPrice * 0.6);
+        }
+    }
+
+
 
 
 }

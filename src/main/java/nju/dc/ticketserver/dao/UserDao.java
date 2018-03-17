@@ -1,5 +1,7 @@
 package nju.dc.ticketserver.dao;
 
+import nju.dc.ticketserver.po.CouponPO;
+import nju.dc.ticketserver.po.OrderPO;
 import nju.dc.ticketserver.po.UserPO;
 
 public interface UserDao {
@@ -29,5 +31,12 @@ public interface UserDao {
     UserPO modifyUserPO(String userID, String username, String phoneNumber);
 
     int modifyPassword(String userID, String newPassword);
+
+    double getUserBalance(String userID);
+
+    double getUserCouponMaxValue(String userID);
+
+    int payOrder(String userID, OrderPO orderPO, CouponPO couponPO);
+
 
 }

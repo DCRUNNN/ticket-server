@@ -21,7 +21,20 @@ public class OrderController {
     @PostMapping("/createOrder")
     public BaseResult createOrder(@RequestBody OrderPO orderPO) {
         int result = orderService.createOrder(orderPO);
-        return result == 1 ? new BaseResult<>(0, "Create Order Successfully!") : new BaseResult<>(-1, "Fail to create order!");
+        if (result == 1) {
+            return new BaseResult<>(0, "Create Order Successfully!");
+
+        } else if (result == -1) {
+            return new BaseResult<>(-1, "座位已售出！");
+
+        }else if (result == -2) {
+            return new BaseResult<>(-1, "余额不足！");
+
+        }else if (result == -3) {
+            return new BaseResult<>(-1, "修改座位状态失败！");
+        }else{
+            return new BaseResult<>(-2, "创建订单失败！");
+        }
     }
 
     @GetMapping("/getUserDiscount")

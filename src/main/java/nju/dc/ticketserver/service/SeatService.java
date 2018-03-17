@@ -18,6 +18,9 @@ public interface SeatService {
 
     String getShowAreaInfo(String showID);
 
-    boolean isSeatAvailable(SeatPO seatPO);
+    boolean isSeatAvailable(ShowSeatPO showSeatPO);
+
+    int setSeatOccupied(ShowSeatPO showSeatPO);
+
 
 }

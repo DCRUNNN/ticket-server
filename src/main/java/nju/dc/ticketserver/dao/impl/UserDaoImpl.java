@@ -1,17 +1,27 @@
 package nju.dc.ticketserver.dao.impl;
 
+import nju.dc.ticketserver.dao.ManagerDao;
 import nju.dc.ticketserver.dao.UserDao;
+import nju.dc.ticketserver.po.CouponPO;
+import nju.dc.ticketserver.po.OrderPO;
+import nju.dc.ticketserver.po.TicketsFinancePO;
 import nju.dc.ticketserver.po.UserPO;
+import nju.dc.ticketserver.utils.VIPHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.Arrays;
 
 @Repository
 public class UserDaoImpl implements UserDao{
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ManagerDao managerDao;
 
     @Override
     public int addUser(UserPO userPO) {
@@ -115,6 +125,67 @@ public class UserDaoImpl implements UserDao{
     public int modifyPassword(String userID, String newPassword) {
         String sql = "update user set password = " + '"' + newPassword + '"' + " where userID = " + '"' + userID + '"';
         return jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public double getUserBalance(String userID) {
+        return getUserPOByUserID(userID).getBalance();
+    }
+
+    @Override
+    public double getUserCouponMaxValue(String userID) {
+        String sql = "select max(value) from coupon where userID = " + '"' + userID + '"';
+        Object obj = jdbcTemplate.queryForObject(sql, Double.class);
+        if (obj == null) {
+            return 0;
+        }else{
+            return (double) obj;
+        }
+    }
+
+    @Override
+    public int payOrder(String userID, OrderPO orderPO, CouponPO couponPO) {
+
+        double totalConsumption = getUserTotalConsumption(orderPO.getUserID());
+        int vipLevel = VIPHelper.getVIPLevel(totalConsumption + orderPO.getTotalPrice());
+        int memberPoints = VIPHelper.getVIPMemberPoints(vipLevel, orderPO.getTotalPrice());
+
+        //设置用户余额 总消费金额 VIP
+        String sql = "update user set balance = balance - " + '"' + orderPO.getTotalPrice() + '"' + " , totalConsumption = totalConsumption + " + '"' + orderPO.getTotalPrice() + '"'
+                + ", vipLevel = " + vipLevel + " , memberPoints = memberPoints + " + '"' + memberPoints + '"' + " where userID = " + '"' + userID + '"';
+
+        //设置订单状态
+        String sql2 = "update orders set orderState = " + '"' + "已支付" + '"' + " where orderID = " + '"' + orderPO.getOrderID() + '"';
+
+        //设置优惠券状态
+        String sql3 = "update coupon set usedTime = " + '"' + couponPO.getUsedTime() + '"' + ",state = " + '"' + "已使用" + '"' + " where couponID=" + '"' + couponPO.getCouponID() + '"';
+
+        // ticketFinance
+        TicketsFinancePO ticketsFinancePO = managerDao.createTicketsFinancePO(orderPO);
+        String sql4 = "insert into ticketsFinance(financialID,date,venueID,venueName,venueAddress,totalIncome,venueIncome,ticketsIncome,paymentRatio,showID,orderID) values "
+                + "("
+                + '"' + ticketsFinancePO.getFinancialID() + '"' + "," + '"' + ticketsFinancePO.getDate() + '"' + "," + '"' + ticketsFinancePO.getVenueID() + '"'
+                + "," + '"' + ticketsFinancePO.getVenueName() + '"' + "," + '"' + ticketsFinancePO.getVenueAddress() + '"' + "," + '"' + ticketsFinancePO.getTotalIncome() + '"'
+                + "," + '"' + ticketsFinancePO.getVenueIncome() + '"' + "," + '"' + ticketsFinancePO.getTicketsIncome() + '"' + "," + '"' + ticketsFinancePO.getPaymentRatio() + '"'
+                + "," + '"' + ticketsFinancePO.getShowID() + '"' + "," + '"' + ticketsFinancePO.getOrderID() + '"'
+                + ")";
+
+        //支付给场馆
+        String sql5 = "update venue set income = income +" + '"' + ticketsFinancePO.getVenueIncome() + '"' + " where venueID = " + '"' + ticketsFinancePO.getVenueID() + '"';
+
+        String[] sqls = new String[5];
+        sqls[0] = sql;
+        sqls[1] = sql2;
+        sqls[2] = sql3;
+        sqls[3] = sql4;
+        sqls[4] = sql5;
+
+        int[] check = jdbcTemplate.batchUpdate(sqls);
+
+        //如果包括0则这两条插入语句至少有一句不成功，success为false
+        boolean success = !Arrays.asList(check).contains(0);
+        //成功的话返回1
+        return success ? 1 : 0;
     }
 
     private RowMapper<UserPO> getUserPOMapper() {

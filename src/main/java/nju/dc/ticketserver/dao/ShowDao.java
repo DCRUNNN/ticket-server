@@ -22,4 +22,6 @@ public interface ShowDao {
 
     List<String> getAllCities();
 
+    String getAreaByPrice(String showID, String price);
+
 }

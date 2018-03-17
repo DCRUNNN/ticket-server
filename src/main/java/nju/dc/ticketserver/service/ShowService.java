@@ -24,5 +24,8 @@ public interface ShowService {
 
     List<String> getAllCities();
 
+    String getAreaByPrice(String showID, String price);
+
+
 
 }

@@ -2,6 +2,7 @@ package nju.dc.ticketserver.dao.impl;
 
 import nju.dc.ticketserver.dao.ManagerDao;
 import nju.dc.ticketserver.dao.VenueDao;
+import nju.dc.ticketserver.dao.utils.DaoUtils;
 import nju.dc.ticketserver.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,6 +18,12 @@ public class ManagerDaoImpl implements ManagerDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DaoUtils daoUtils;
+
+    @Autowired
+    private VenueDao venueDao;
 
     @Override
     public int confirmRegVenue(String venueID) {
@@ -115,6 +122,32 @@ public class ManagerDaoImpl implements ManagerDao {
         System.out.println(getPostVenuePO("0000001"));
 
         return 0;
+    }
+
+    @Override
+    public TicketsFinancePO createTicketsFinancePO(OrderPO orderPO) {
+
+        TicketsFinancePO po = new TicketsFinancePO();
+
+        po.setDate(daoUtils.setSignUpDate());
+        po.setFinancialID(daoUtils.createTicketFinanceID());
+
+        double paymentRatio = getManagerPO("458891338@163.com").getPaymentRatio(); //tickets收入的百分比
+
+        po.setPaymentRatio(paymentRatio);
+        po.setTotalIncome(orderPO.getTotalPrice());
+        po.setTicketsIncome(orderPO.getTotalPrice() * paymentRatio);
+        po.setVenueIncome(orderPO.getTotalPrice() - orderPO.getTotalPrice() * paymentRatio);
+        po.setVenueID(orderPO.getVenueID());
+
+        VenuePO venuePO = venueDao.getVenuePO(orderPO.getVenueID());
+        po.setVenueAddress(venuePO.getAddress());
+        po.setVenueName(venuePO.getVenueName());
+
+        po.setOrderID(orderPO.getOrderID());
+        po.setShowID(orderPO.getShowID());
+
+        return po;
     }
 
     @Override

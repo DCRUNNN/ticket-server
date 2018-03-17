@@ -55,6 +55,9 @@ public class SeatDaoImpl implements SeatDao {
         return jdbcTemplate.update(sql, new Object[]{"已售", showSeatPO.getShowID(), showSeatPO.getVenueID(), showSeatPO.getArea(), showSeatPO.getRow(), showSeatPO.getSeat()}, types);
     }
 
+
+
+
     private RowMapper<ShowSeatPO> getShowSeatMapper() {
         return (resultSet, i) -> {
             ShowSeatPO po = new ShowSeatPO();

@@ -12,6 +12,9 @@ public class TicketsFinancePO {
     private double ticketsIncome;
     private double paymentRatio;
 
+    private String showID;
+    private String orderID;
+
     public TicketsFinancePO() {
     }
 
@@ -87,6 +90,22 @@ public class TicketsFinancePO {
         this.paymentRatio = paymentRatio;
     }
 
+    public String getShowID() {
+        return showID;
+    }
+
+    public void setShowID(String showID) {
+        this.showID = showID;
+    }
+
+    public String getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID = orderID;
+    }
+
     @Override
     public String toString() {
         return "TicketsFinancePO{" +
@@ -99,6 +118,8 @@ public class TicketsFinancePO {
                 ", venueIncome=" + venueIncome +
                 ", ticketsIncome=" + ticketsIncome +
                 ", paymentRatio=" + paymentRatio +
+                ", showID='" + showID + '\'' +
+                ", orderID='" + orderID + '\'' +
                 '}';
     }
 }

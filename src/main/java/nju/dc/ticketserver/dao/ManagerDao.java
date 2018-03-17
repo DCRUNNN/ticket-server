@@ -1,9 +1,6 @@
 package nju.dc.ticketserver.dao;
 
-import nju.dc.ticketserver.po.ManagerPO;
-import nju.dc.ticketserver.po.ModifyApplicationPO;
-import nju.dc.ticketserver.po.OrderPO;
-import nju.dc.ticketserver.po.RegApplicationPO;
+import nju.dc.ticketserver.po.*;
 
 import java.util.List;
 
@@ -20,5 +17,7 @@ public interface ManagerDao {
     List<RegApplicationPO> getVenueRegApplicationPOs();
 
     List<ModifyApplicationPO> getVenueModifyApplicationPOs();
+
+    TicketsFinancePO createTicketsFinancePO(OrderPO orderPO);
 
 }

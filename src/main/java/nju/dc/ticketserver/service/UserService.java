@@ -26,4 +26,10 @@ public interface UserService {
     UserPO modifyUserPO(String userID, String username, String phoneNumber);
 
     int modifyUserPassword(String userID, String previousPassword, String newPassword);
+
+    double getUserBalance(String userID);
+
+    double getUserCouponMaxValue(String userID);
+
+    int payOrder(String userID, String orderID, String couponID);
 }

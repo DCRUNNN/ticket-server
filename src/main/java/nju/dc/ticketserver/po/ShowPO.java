@@ -17,6 +17,10 @@ public class ShowPO {
     private String description;
     private String state;
 
+    private String area;   // A-3/B-4/C-6
+    private int allRow; //数字
+    private String seat; // 10/20/30
+
     public ShowPO() {
     }
 
@@ -116,6 +120,30 @@ public class ShowPO {
         this.state = state;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public int getAllRow() {
+        return allRow;
+    }
+
+    public void setAllRow(int allRow) {
+        this.allRow = allRow;
+    }
+
+    public String getSeat() {
+        return seat;
+    }
+
+    public void setSeat(String seat) {
+        this.seat = seat;
+    }
+
     @Override
     public String toString() {
         return "ShowPO{" +
@@ -128,9 +156,12 @@ public class ShowPO {
                 ", showName='" + showName + '\'' +
                 ", photoSrc='" + photoSrc + '\'' +
                 ", showDate='" + showDate + '\'' +
-                ", price=" + price +
+                ", price='" + price + '\'' +
                 ", description='" + description + '\'' +
                 ", state='" + state + '\'' +
+                ", area='" + area + '\'' +
+                ", allRow=" + allRow +
+                ", seat='" + seat + '\'' +
                 '}';
     }
 }

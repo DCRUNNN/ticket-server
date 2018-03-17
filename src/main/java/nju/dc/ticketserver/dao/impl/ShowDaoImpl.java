@@ -20,22 +20,7 @@ public class ShowDaoImpl implements ShowDao {
     public ShowPO getShowPOByID(String showID) {
 
         String sql = "Select * from shows where showID = " + '"' + showID + '"';
-        ShowPO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
-            ShowPO tempPO = new ShowPO();
-            tempPO.setShowID(showID);
-            tempPO.setCategory(resultSet.getString("category"));
-            tempPO.setCity(resultSet.getString("city"));
-            tempPO.setVenueID(resultSet.getString("venueID"));
-            tempPO.setVenueName(resultSet.getString("venueName"));
-            tempPO.setPerformer(resultSet.getString("performer"));
-            tempPO.setShowName(resultSet.getString("showName"));
-            tempPO.setPhotoSrc(resultSet.getString("photoSrc"));
-            tempPO.setShowDate(resultSet.getString("showDate"));
-            tempPO.setPrice(resultSet.getString("price"));
-            tempPO.setDescription(resultSet.getString("description"));
-            tempPO.setState(resultSet.getString("state"));
-            return tempPO;
-        });
+        ShowPO po = jdbcTemplate.queryForObject(sql, getShowPOMapper());
         return po;
     }
 
@@ -97,6 +82,21 @@ public class ShowDaoImpl implements ShowDao {
         return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
     }
 
+    @Override
+    public String getAreaByPrice(String showID, String price) {
+        ShowPO showPO = getShowPOByID(showID);
+        String[] areas = showPO.getArea().split("/");
+        String[] prices = showPO.getPrice().split("/");
+        String result = "";
+        for (int i = 0; i < areas.length; i++) {
+            if (prices[i].equals(price)) {
+                result = areas[i];
+                break;
+            }
+        }
+        return result.split("-")[0];
+    }
+
     private RowMapper<ShowPO> getShowPOMapper() {
         return (resultSet, i) -> {
             ShowPO po = new ShowPO();
@@ -109,14 +109,21 @@ public class ShowDaoImpl implements ShowDao {
             po.setShowName(resultSet.getString("showName"));
             po.setPhotoSrc(resultSet.getString("photoSrc"));
 
-            String date = resultSet.getString("showDate");
-            po.setShowDate(date.substring(0, date.length() - 2));
+//            String date = resultSet.getString("showDate");
+//            po.setShowDate(date.substring(0, date.length() - 2));
+            po.setShowDate(resultSet.getString("showDate"));
 
             po.setPrice(resultSet.getString("price"));
             po.setDescription(resultSet.getString("description"));
             po.setState(resultSet.getString("state"));
+
+            po.setArea(resultSet.getString("area"));
+            po.setAllRow(resultSet.getInt("allRow"));
+            po.setSeat(resultSet.getString("seatInfo"));
+
             return po;
         };
     }
+
 
 }

@@ -60,21 +60,8 @@ public class OrderDaoImpl implements OrderDao {
                 + "," + '"' + orderPO.getDiscount() + '"'
                 + ")";
 
-        String sql2 = "update user set totalConsumption = totalConsumption + " + orderPO.getTotalPrice() + " where userID = " + '"' + orderPO.getUserID() + '"';
 
-        //VIPLevel
-
-        String[] sqls = new String[2];
-        sqls[0] = sql;
-        sqls[1] = sql2;
-
-        int[] check = jdbcTemplate.batchUpdate(sqls);
-
-        //如果包括0则这两条插入语句至少有一句不成功，success为false
-        boolean success = !Arrays.asList(check).contains(0);
-        //成功的话返回1
-        return success ? 1 : 0;
-
+        return jdbcTemplate.update(sql);
     }
 
     @Override

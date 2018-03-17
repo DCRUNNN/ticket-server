@@ -14,7 +14,6 @@ public class ShowController {
 
     @GetMapping("/getShowPO")
     public BaseResult getShowPO(@RequestParam String showID) {
-        ;
         return new BaseResult<>(0, showService.getShowPOByID(showID));
     }
 

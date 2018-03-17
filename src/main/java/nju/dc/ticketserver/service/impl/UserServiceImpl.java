@@ -2,7 +2,11 @@ package nju.dc.ticketserver.service.impl;
 
 import nju.dc.ticketserver.dao.UserDao;
 import nju.dc.ticketserver.dao.utils.DaoUtils;
+import nju.dc.ticketserver.po.CouponPO;
+import nju.dc.ticketserver.po.OrderPO;
 import nju.dc.ticketserver.po.UserPO;
+import nju.dc.ticketserver.service.CouponService;
+import nju.dc.ticketserver.service.OrderService;
 import nju.dc.ticketserver.service.UserService;
 import nju.dc.ticketserver.utils.ActiveCodeHelper;
 import nju.dc.ticketserver.utils.EncryptHelper;
@@ -15,6 +19,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private CouponService couponService;
 
     @Autowired
     private DaoUtils daoUtils;
@@ -104,5 +114,22 @@ public class UserServiceImpl implements UserService {
         }else{
             return -1;
         }
+    }
+
+    @Override
+    public double getUserBalance(String userID) {
+        return userDao.getUserBalance(userID);
+    }
+
+    @Override
+    public double getUserCouponMaxValue(String userID) {
+        return userDao.getUserCouponMaxValue(userID);
+    }
+
+    @Override
+    public int payOrder(String userID, String orderID, String couponID) {
+        OrderPO orderPO = orderService.getOrderPO(orderID);
+        CouponPO couponPO = couponService.getCouponPO(couponID);
+        return userDao.payOrder(userID, orderPO, couponPO);
     }
 }

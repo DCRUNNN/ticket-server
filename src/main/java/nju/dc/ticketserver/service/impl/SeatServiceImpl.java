@@ -66,8 +66,8 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Override
-    public boolean isSeatAvailable(SeatPO seatPO) {
-        return false;
+    public boolean isSeatAvailable(ShowSeatPO showSeatPO) {
+        return seatDao.isSeatAvailable(showSeatPO);
     }
 
     @Override
@@ -103,8 +103,8 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public String convertSeatInfo(String area, int row, String seat) {
-//           输入： A-2/B-2/C-3/D-5 ,12 , 50/50/60/60/10/10/10/5/5/5/5/5
-//           输出：A-01-01,50;A-02-01,50/B-03-01,60;B-04-01,60/C-05-01,10;C-06-01,10;C-07-01,10/D-08-01,10;D-09-01,5;D-10-01,5;D-11-01,5;D-12-01,5
+//         输入： A-2/B-2/C-3/D-5 ,12 , 50/50/60/60/10/10/10/5/5/5/5/5
+//         输出：A-01-01,50;A-02-01,50/B-01-01,60;B-02-01,60/C-01-01,10;C-02-01,10;C-03-01,10/D-01-01,5;D-02-01,5;D-03-01,5;D-04-01,5;D-05-01,5
         String[] areas = area.split("/");
         String[] seats = seat.split("/");
         StringBuffer result = new StringBuffer();
@@ -114,7 +114,8 @@ public class SeatServiceImpl implements SeatService {
             String areaName = areas[i].split("-")[0];
             int areaRow = Integer.parseInt(areas[i].split("-")[1]);
             for(int j=0;j<areaRow;j++) {
-                result.append(areaName).append("-").append(formatInteger(++k, 2)).append("-01").append(",").append(seats[k-1]);
+                ++k;
+                result.append(areaName).append("-").append(formatInteger(j+1, 2)).append("-01").append(",").append(seats[k-1]);
                 if (j != areaRow - 1) {
                     result.append(";");
                 } else {
@@ -124,6 +125,12 @@ public class SeatServiceImpl implements SeatService {
         }
         result.deleteCharAt(result.length() - 1);
         return result.toString();
+    }
+
+
+    @Override
+    public int setSeatOccupied(ShowSeatPO showSeatPO) {
+        return seatDao.setSeatOccupied(showSeatPO);
     }
 
     private String formatInteger(int i, int length) {

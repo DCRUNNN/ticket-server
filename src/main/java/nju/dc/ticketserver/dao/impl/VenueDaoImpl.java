@@ -45,11 +45,11 @@ public class VenueDaoImpl implements VenueDao {
     @Override
     public int releaseShowPlan(ShowPO showPO, List<ShowSeatPO> showSeatPOList) {
 
-        String sql = "insert into shows(showID,category,city,venueID,venueName,performer,showName,photoSrc,showDate,price,description,state) values "
+        String sql = "insert into shows(showID,category,city,venueID,venueName,performer,showName,photoSrc,showDate,price,description,state,area,allRow,seatInfo) values "
                 + "("
                 + '"' + showPO.getShowID() + '"' + "," + '"' + showPO.getCategory() + '"' + "," + '"' + showPO.getCity() + '"' + "," + '"' + showPO.getVenueID() + '"'
                 + "," + '"' + showPO.getVenueName() + '"' + "," + '"' + showPO.getPerformer() + '"' + "," + '"' + showPO.getShowName() + '"' + "," + '"' + showPO.getPhotoSrc() + '"' + "," + '"' + showPO.getShowDate() + '"'
-                + "," + '"' + showPO.getPrice() + '"' + "," + '"' + showPO.getDescription() + '"' + "," + '"' + showPO.getState() + '"'
+                + "," + '"' + showPO.getPrice() + '"' + "," + '"' + showPO.getDescription() + '"' + "," + '"' + showPO.getState() + '"' + "," + '"' + showPO.getArea() + '"' + "," + '"' + showPO.getAllRow() + '"' + "," + '"' + showPO.getSeat() + '"'
                 + ")";
 
 

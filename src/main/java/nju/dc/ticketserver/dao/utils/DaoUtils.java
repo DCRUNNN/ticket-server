@@ -29,6 +29,8 @@ public class DaoUtils {
     /**
      * 创建用户注册日期
      * 创建场馆注册日期
+     * 创建订单日期
+     * 创建tickets finance日期
      * @return
      */
     public String setSignUpDate() {
@@ -71,6 +73,12 @@ public class DaoUtils {
         String sql = "select count(*) as total from shows";
         int total = jdbcTemplate.query(sql, resultSet -> resultSet.next() ? resultSet.getInt("total") : 0);
         return "show-" + formatInteger((total + 1), 6);
+    }
+
+    public String createCouponID() {
+        String sql = "select count(*) as total from coupon";
+        int total = jdbcTemplate.query(sql, resultSet -> resultSet.next() ? resultSet.getInt("total") : 0);
+        return "coupon-" + formatInteger((total + 1), 6);
     }
 
     /**
