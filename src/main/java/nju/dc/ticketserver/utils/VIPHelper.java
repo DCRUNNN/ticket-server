@@ -51,6 +51,8 @@ public class VIPHelper {
     }
 
 
-
+    public static double memberPointsToCoupon(int usedMemberPoints) {
+        return Double.parseDouble(String.format("%.2f", usedMemberPoints * 0.01));
+    }
 
 }

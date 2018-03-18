@@ -10,7 +10,7 @@ public interface CouponService {
 
     CouponPO getCouponPO(String couponID);
 
-    CouponPO getCouponPOByState(String userID, String state);
+    List<CouponPO> getCouponPOByState(String userID, String state);
 
     int addCouponPO(CouponPO couponPO);
 

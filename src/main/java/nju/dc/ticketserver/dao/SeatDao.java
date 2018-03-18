@@ -17,4 +17,6 @@ public interface SeatDao {
 
     int setSeatOccupied(ShowSeatPO showSeatPO);
 
+    List<ShowSeatPO> getSoldSeat(String showID, String area);
+
 }

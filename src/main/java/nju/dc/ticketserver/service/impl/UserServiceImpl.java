@@ -129,7 +129,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public int payOrder(String userID, String orderID, String couponID) {
         OrderPO orderPO = orderService.getOrderPO(orderID);
-        CouponPO couponPO = couponService.getCouponPO(couponID);
+        CouponPO couponPO = null;
+        if (couponID != "") {
+             couponPO = couponService.getCouponPO(couponID);
+        }else{
+            couponPO = new CouponPO();
+        }
         return userDao.payOrder(userID, orderPO, couponPO);
     }
 }

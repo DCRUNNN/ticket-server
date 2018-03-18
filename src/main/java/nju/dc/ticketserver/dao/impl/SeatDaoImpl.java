@@ -56,7 +56,11 @@ public class SeatDaoImpl implements SeatDao {
     }
 
 
-
+    @Override
+    public List<ShowSeatPO> getSoldSeat(String showID, String area) {
+        String sql = "select * from showSeat where showID = " + '"' + showID + '"' + " and state = " + '"' + "已售" + '"' + " and area = " + '"' + area + '"';
+        return jdbcTemplate.query(sql, getShowSeatMapper());
+    }
 
     private RowMapper<ShowSeatPO> getShowSeatMapper() {
         return (resultSet, i) -> {

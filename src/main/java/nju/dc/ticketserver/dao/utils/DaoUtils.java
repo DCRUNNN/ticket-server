@@ -31,6 +31,9 @@ public class DaoUtils {
      * 创建场馆注册日期
      * 创建订单日期
      * 创建tickets finance日期
+     * 创建优惠券兑换日期
+     * 创建优惠券使用日期
+     *
      * @return
      */
     public String setSignUpDate() {

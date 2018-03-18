@@ -23,6 +23,9 @@ public class SeatServiceImpl implements SeatService {
     @Autowired
     private SeatDao seatDao;
 
+    @Autowired
+    private ShowService showService;
+
     @Override
     public List<SeatPO> getVenueSeatPOs(String venueID) {
 
@@ -131,6 +134,11 @@ public class SeatServiceImpl implements SeatService {
     @Override
     public int setSeatOccupied(ShowSeatPO showSeatPO) {
         return seatDao.setSeatOccupied(showSeatPO);
+    }
+
+    @Override
+    public List<ShowSeatPO> getSoldSeat(String showID, String price) {
+        return seatDao.getSoldSeat(showID, showService.getAreaByPrice(showID, price));
     }
 
     private String formatInteger(int i, int length) {

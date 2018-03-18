@@ -20,4 +20,9 @@ public class ManagerDaoImplTest {
         managerDao.giveMoneyToVenue(null);
     }
 
+    @Test
+    public void getManagerRatio() throws Exception {
+        System.out.println(managerDao.getManagerPO("458891338@163.com").getPaymentRatio());
+    }
+
 }

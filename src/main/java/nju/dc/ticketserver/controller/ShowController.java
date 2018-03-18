@@ -48,7 +48,7 @@ public class ShowController {
     }
 
     @GetMapping("/allCities")
-    public BaseResult getAllCities(){
+    public BaseResult getAllCities() {
         return new BaseResult<>(0, showService.getAllCities());
     }
 

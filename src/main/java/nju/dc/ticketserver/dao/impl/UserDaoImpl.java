@@ -2,6 +2,7 @@ package nju.dc.ticketserver.dao.impl;
 
 import nju.dc.ticketserver.dao.ManagerDao;
 import nju.dc.ticketserver.dao.UserDao;
+import nju.dc.ticketserver.dao.utils.DaoUtils;
 import nju.dc.ticketserver.po.CouponPO;
 import nju.dc.ticketserver.po.OrderPO;
 import nju.dc.ticketserver.po.TicketsFinancePO;
@@ -22,6 +23,9 @@ public class UserDaoImpl implements UserDao{
 
     @Autowired
     private ManagerDao managerDao;
+
+    @Autowired
+    private DaoUtils daoUtils;
 
     @Override
     public int addUser(UserPO userPO) {
@@ -150,17 +154,40 @@ public class UserDaoImpl implements UserDao{
         int vipLevel = VIPHelper.getVIPLevel(totalConsumption + orderPO.getTotalPrice());
         int memberPoints = VIPHelper.getVIPMemberPoints(vipLevel, orderPO.getTotalPrice());
 
+        boolean isUsingCoupon = false;
+        if (couponPO.getCouponID() != null) {
+            isUsingCoupon = true;
+        }
+
+        System.out.println(isUsingCoupon);
+
+        double nowPrice = 0;
+        if (isUsingCoupon) {
+            nowPrice = orderPO.getTotalPrice() * orderPO.getDiscount() - couponPO.getValue();
+        }else{
+            nowPrice = orderPO.getTotalPrice() * orderPO.getDiscount();
+        }
+
         //设置用户余额 总消费金额 VIP
-        String sql = "update user set balance = balance - " + '"' + orderPO.getTotalPrice() + '"' + " , totalConsumption = totalConsumption + " + '"' + orderPO.getTotalPrice() + '"'
+        String sql = "update user set balance = balance - " + '"' + nowPrice + '"' + " , totalConsumption = totalConsumption + " + '"' + nowPrice + '"'
                 + ", vipLevel = " + vipLevel + " , memberPoints = memberPoints + " + '"' + memberPoints + '"' + " where userID = " + '"' + userID + '"';
 
         //设置订单状态
-        String sql2 = "update orders set orderState = " + '"' + "已支付" + '"' + " where orderID = " + '"' + orderPO.getOrderID() + '"';
+        String sql2 = "update orders set orderState = " + '"' + "已支付" + '"' + " , totalPrice = " + '"' + nowPrice + '"' + " where orderID = " + '"' + orderPO.getOrderID() + '"';
 
         //设置优惠券状态
-        String sql3 = "update coupon set usedTime = " + '"' + couponPO.getUsedTime() + '"' + ",state = " + '"' + "已使用" + '"' + " where couponID=" + '"' + couponPO.getCouponID() + '"';
+        String sql3 = "";
+
+        if (isUsingCoupon == true) {
+            sql3 = "update coupon set usedTime = " + '"' + daoUtils.setSignUpDate() + '"' + ",state = " + '"' + "已使用" + '"'
+                    + " , orderID = " + '"' + orderPO.getOrderID() + '"'
+                    + " where couponID=" + '"' + couponPO.getCouponID() + '"';
+        }
 
         // ticketFinance
+
+        orderPO.setTotalPrice(nowPrice);
+
         TicketsFinancePO ticketsFinancePO = managerDao.createTicketsFinancePO(orderPO);
         String sql4 = "insert into ticketsFinance(financialID,date,venueID,venueName,venueAddress,totalIncome,venueIncome,ticketsIncome,paymentRatio,showID,orderID) values "
                 + "("
@@ -173,18 +200,27 @@ public class UserDaoImpl implements UserDao{
         //支付给场馆
         String sql5 = "update venue set income = income +" + '"' + ticketsFinancePO.getVenueIncome() + '"' + " where venueID = " + '"' + ticketsFinancePO.getVenueID() + '"';
 
-        String[] sqls = new String[5];
-        sqls[0] = sql;
-        sqls[1] = sql2;
-        sqls[2] = sql3;
-        sqls[3] = sql4;
-        sqls[4] = sql5;
+        String[] sqls = null;
+        if (isUsingCoupon) {
+            sqls = new String[5];
+            sqls[0] = sql;
+            sqls[1] = sql2;
+            sqls[2] = sql3;
+            sqls[3] = sql4;
+            sqls[4] = sql5;
+        }else{
+            sqls = new String[4];
+            sqls[0] = sql;
+            sqls[1] = sql2;
+            sqls[2] = sql4;
+            sqls[3] = sql5;
+        }
 
         int[] check = jdbcTemplate.batchUpdate(sqls);
 
         //如果包括0则这两条插入语句至少有一句不成功，success为false
         boolean success = !Arrays.asList(check).contains(0);
-        //成功的话返回1
+//        成功的话返回1
         return success ? 1 : 0;
     }
 

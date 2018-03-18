@@ -122,4 +122,13 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.getRecentOrders(userID);
     }
 
+    @Override
+    public List<OrderPO> getUserUnpayOrders(String userID, String showID) {
+        return orderDao.getUserUnpayOrders(userID, showID);
+    }
+
+    @Override
+    public OrderPO getUnpayOrder(String orderID) {
+        return orderDao.getUnpayOrder(orderID);
+    }
 }

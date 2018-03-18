@@ -40,7 +40,7 @@ public class OrderDaoImpl implements OrderDao {
             tempPO.setDiscount(resultSet.getDouble("discount"));
 
             //处理seat
-            tempPO.setSeat(resultSet.getString("seat"));
+            tempPO.setSeat(resultSet.getString("seats"));
 
             return tempPO;
         });
@@ -50,16 +50,18 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public int createOrder(OrderPO orderPO) {
+
+        double nowPrice = orderPO.getTotalPrice() * orderPO.getDiscount();
+
         String sql = "insert into orders(orderID,userID,username,venueID,showID,showName,seats,purchaseMethod,ticketsAmount,"
                 + "orderState,orderDate,totalPrice,unitPrice,discount) values "
                 + "("
                 + '"' + orderPO.getOrderID() + '"' + "," + '"' + orderPO.getUserID() + '"' + "," + '"' + orderPO.getUsername() + '"'
                 + "," + '"' + orderPO.getVenueID() + '"' + "," + '"' + orderPO.getShowID() + '"' + "," + '"' + orderPO.getShowName() + '"' + "," + '"' + orderPO.getSeat() + '"'
                 + "," + '"' + orderPO.getPurchaseMethod() + '"' + "," + '"' + orderPO.getTicketsAmount() + '"' + "," + '"' + orderPO.getOrderState() + '"'
-                + "," + '"' + orderPO.getOrderDate() + '"' + "," + '"' + orderPO.getTotalPrice() + '"' + "," + '"' + orderPO.getUnitPrice() + '"'
+                + "," + '"' + orderPO.getOrderDate() + '"' + "," + '"' + nowPrice + '"' + "," + '"' + orderPO.getUnitPrice() + '"'
                 + "," + '"' + orderPO.getDiscount() + '"'
                 + ")";
-
 
         return jdbcTemplate.update(sql);
     }
@@ -71,6 +73,19 @@ public class OrderDaoImpl implements OrderDao {
         return recentOrderList.size() == 0 ? new ArrayList<>() : recentOrderList;
     }
 
+    @Override
+    public List<OrderPO> getUserUnpayOrders(String userID, String showID) {
+        String sql = "select * from orders where userID = " + '"' + userID + '"' + " and showID = " + '"' + showID + '"' + " and orderState=" + '"' + "待支付" + '"';
+        List<OrderPO> unpayOrderList = jdbcTemplate.query(sql, getOrderPOMapper());
+        return unpayOrderList.size() == 0 ? new ArrayList<>() : unpayOrderList;
+    }
+
+    @Override
+    public OrderPO getUnpayOrder(String orderID) {
+        OrderPO orderPO = getOrderPO(orderID);
+        String sql = "select * from orders where orderID = " + '"' + orderPO.getUserID() + '"' + " and orderState=" + '"' + "待支付" + '"';
+        return jdbcTemplate.queryForObject(sql, getOrderPOMapper());
+    }
 
     private RowMapper<OrderPO> getOrderPOMapper() {
         return (resultSet, i) -> {

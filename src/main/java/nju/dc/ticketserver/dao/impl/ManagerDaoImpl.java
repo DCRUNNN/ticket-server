@@ -135,8 +135,11 @@ public class ManagerDaoImpl implements ManagerDao {
         double paymentRatio = getManagerPO("458891338@163.com").getPaymentRatio(); //tickets收入的百分比
 
         po.setPaymentRatio(paymentRatio);
+
         po.setTotalIncome(orderPO.getTotalPrice());
+
         po.setTicketsIncome(orderPO.getTotalPrice() * paymentRatio);
+
         po.setVenueIncome(orderPO.getTotalPrice() - orderPO.getTotalPrice() * paymentRatio);
         po.setVenueID(orderPO.getVenueID());
 

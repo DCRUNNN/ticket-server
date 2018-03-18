@@ -22,5 +22,6 @@ public interface SeatService {
 
     int setSeatOccupied(ShowSeatPO showSeatPO);
 
+    List<ShowSeatPO> getSoldSeat(String showID, String price);
 
 }

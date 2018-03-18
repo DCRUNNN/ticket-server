@@ -29,23 +29,26 @@ public class CouponDaoImpl implements CouponDao {
     @Override
     public CouponPO getCouponPO(String couponID) {
         String sql = "select * from coupon where couponID = " + '"' + couponID + '"';
+//        CouponPO po = jdbcTemplate.queryForObject(sql, getCouponPOMapper());
+//        return po == null ? new CouponPO() : po;
         return jdbcTemplate.queryForObject(sql, getCouponPOMapper());
     }
 
 
     @Override
-    public CouponPO getCouponPOByState(String userID, String state) {
+    public List<CouponPO> getCouponPOByState(String userID, String state) {
         String sql = "select * from coupon where userID = " + '"' + userID + '"' + " and state = " + '"' + state + '"';
-        return jdbcTemplate.queryForObject(sql, getCouponPOMapper());
+        List<CouponPO> couponPOList = jdbcTemplate.query(sql, getCouponPOMapper());
+        return couponPOList.size() == 0 ? new ArrayList<>() : couponPOList;
     }
 
     @Override
     public int addCouponPO(CouponPO couponPO) {
-        String sql = "insert into coupon(couponID,userID,couponName,description,lastTerm,state,orderID,usedTime,usedMemberPoint,value) values "
+        String sql = "insert into coupon(couponID,userID,couponName,description,lastTerm,state,orderID,usedTime,usedMemberPoint,value,exchangeTime) values "
                 + "("
                 + '"' + couponPO.getCouponID() + '"' + "," + '"' + couponPO.getUserID() + '"' + "," + '"' + couponPO.getCouponName() + '"' + "," + '"' + couponPO.getDescription() + '"'
                 + "," + '"' + couponPO.getLastTerm() + '"' + "," + '"' + couponPO.getState() + '"' + "," + '"' + couponPO.getOrderID() + '"' + "," + '"' + couponPO.getUsedTime() + '"'
-                + "," + '"' + couponPO.getUsedMemberPoint() + '"' + "," + '"' + couponPO.getValue() + '"'
+                + "," + '"' + couponPO.getUsedMemberPoint() + '"' + "," + '"' + couponPO.getValue() + '"' + "," + '"' + couponPO.getExchangeTime() + '"'
                 + ")";
 
         String sql2 = "update user set memberPoints = memberPoints - " + '"' + couponPO.getUsedMemberPoint() + '"' + " where userID = " + '"' + couponPO.getUserID() + '"';
@@ -74,11 +77,13 @@ public class CouponDaoImpl implements CouponDao {
             po.setState(resultSet.getString("state"));
             po.setOrderID(resultSet.getString("orderID"));
 
-            String date = resultSet.getString("usedTime");
-            po.setUsedTime(date.substring(0, date.length() - 2));
+            po.setUsedTime(resultSet.getString("usedTime"));
 
             po.setUsedMemberPoint(resultSet.getInt("usedMemberPoint"));
             po.setValue(resultSet.getDouble("value"));
+
+            po.setExchangeTime(resultSet.getString("exchangeTime"));
+
             return po;
         };
     }

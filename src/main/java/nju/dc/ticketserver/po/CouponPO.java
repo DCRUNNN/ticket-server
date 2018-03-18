@@ -12,6 +12,8 @@ public class CouponPO {
     private String usedTime; //使用优惠券的时间
     private int usedMemberPoint;
     private double value; //价值多少钱
+    private String exchangeTime; //兑换的时间
+
 
     public String getCouponID() {
         return couponID;
@@ -93,6 +95,14 @@ public class CouponPO {
         this.value = value;
     }
 
+    public String getExchangeTime() {
+        return exchangeTime;
+    }
+
+    public void setExchangeTime(String exchangeTime) {
+        this.exchangeTime = exchangeTime;
+    }
+
     @Override
     public String toString() {
         return "CouponPO{" +
@@ -106,6 +116,7 @@ public class CouponPO {
                 ", usedTime='" + usedTime + '\'' +
                 ", usedMemberPoint=" + usedMemberPoint +
                 ", value=" + value +
+                ", exchangeTime='" + exchangeTime + '\'' +
                 '}';
     }
 }

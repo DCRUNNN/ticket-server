@@ -14,4 +14,8 @@ public interface OrderService {
     double getUserDiscount(String userID, int vipLevel);
 
     List<OrderPO> getRecentOrders(String userID);
+
+    List<OrderPO> getUserUnpayOrders(String userID, String showID);
+
+    OrderPO getUnpayOrder(String orderID);
 }

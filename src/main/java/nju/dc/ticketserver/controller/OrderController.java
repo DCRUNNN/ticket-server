@@ -47,5 +47,15 @@ public class OrderController {
         return new BaseResult(0, orderService.getRecentOrders(userID));
     }
 
+    @GetMapping("/getUnpayOrders")
+    public BaseResult getUnpayOrders(@RequestParam String userID, @RequestParam String showID) {
+        return new BaseResult(0, orderService.getUserUnpayOrders(userID, showID));
+
+    }
+
+    @GetMapping("/getUnpayOrder")
+    public BaseResult getUnpayOrder(@RequestParam String orderID) {
+        return new BaseResult(0, orderService.getUnpayOrder(orderID));
+    }
 
 }

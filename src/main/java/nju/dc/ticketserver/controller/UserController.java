@@ -55,30 +55,36 @@ public class UserController {
         boolean equal = EncryptHelper.checkPassword(userPO.getPassword(), checkUserPO.getPassword());
         if (equal) {
             return new BaseResult(0, checkUserPO);
-        }else{
+        } else {
             return new BaseResult(2, "userName and password do not match!");
         }
     }
 
     @GetMapping("/modifyUserInfo")
-    public BaseResult modifyUserInfo(@RequestParam String userID,@RequestParam String username,@RequestParam String phoneNumber){
+    public BaseResult modifyUserInfo(@RequestParam String userID, @RequestParam String username, @RequestParam String phoneNumber) {
         UserPO checkUserPO = userService.getUserPO(username);
         if (checkUserPO != null && !checkUserPO.getUserID().equals(userID)) {
             return new BaseResult(-1, "用户名已存在");
-        }else{
-            return new BaseResult<>(0,userService.modifyUserPO(userID, username, phoneNumber));
+        } else {
+            return new BaseResult<>(0, userService.modifyUserPO(userID, username, phoneNumber));
         }
     }
 
     @GetMapping("/modifyUserPassword")
-    public BaseResult modifyUserPassword(@RequestParam String userID,@RequestParam String previousPassword, @RequestParam String newPassword){
+    public BaseResult modifyUserPassword(@RequestParam String userID, @RequestParam String previousPassword, @RequestParam String newPassword) {
         int result = userService.modifyUserPassword(userID, previousPassword, newPassword);
         if (result == 1) {
             return new BaseResult<>(0, "Modify Password Successfully!");
-        }else if(result==-1){
+        } else if (result == -1) {
             return new BaseResult<>(-1, "当前密码输入不正确!");
-        }else{
+        } else {
             return new BaseResult<>(-2, "修改密码失败");
         }
+    }
+
+    @GetMapping("/confirmPayOrder")
+    public BaseResult confirmPayOrder(@RequestParam String userID, @RequestParam String orderID, @RequestParam String couponID) {
+        int result = userService.payOrder(userID, orderID, couponID);
+        return result == 1 ? new BaseResult<>(0, "Pay Order Successfully!") : new BaseResult<>(-1, "Fail to pay order!");
     }
 }

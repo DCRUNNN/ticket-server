@@ -19,5 +19,11 @@ public class SeatController {
     public BaseResult getShowSeatPO(@RequestParam String showID) {
         return new BaseResult<>(0, seatService.getShowSeatPOs(showID));
     }
+
+    @GetMapping("/getSoldSeat")
+    public BaseResult getSoldSeat(@RequestParam String showID, @RequestParam String price) {
+        return new BaseResult(0, seatService.getSoldSeat(showID, price));
+    }
+
 }
 
