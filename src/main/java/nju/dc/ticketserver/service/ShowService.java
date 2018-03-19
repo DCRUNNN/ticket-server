@@ -26,6 +26,4 @@ public interface ShowService {
 
     String getAreaByPrice(String showID, String price);
 
-
-
 }

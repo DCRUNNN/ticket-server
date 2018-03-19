@@ -20,21 +20,13 @@ public class OrderController {
 
     @PostMapping("/createOrder")
     public BaseResult createOrder(@RequestBody OrderPO orderPO) {
-        int result = orderService.createOrder(orderPO);
-        if (result == 1) {
-            return new BaseResult<>(0, "Create Order Successfully!");
-
-        } else if (result == -1) {
-            return new BaseResult<>(-1, "座位已售出！");
-
-        }else if (result == -2) {
-            return new BaseResult<>(-1, "余额不足！");
-
-        }else if (result == -3) {
-            return new BaseResult<>(-1, "修改座位状态失败！");
-        }else{
-            return new BaseResult<>(-2, "创建订单失败！");
+        String result = orderService.createOrder(orderPO);
+        if (result.startsWith("order")) {
+            return new BaseResult<>(0, result);
+        } else {
+            return new BaseResult<>(-1, result);
         }
+
     }
 
     @GetMapping("/getUserDiscount")
@@ -43,7 +35,7 @@ public class OrderController {
     }
 
     @GetMapping("/getRecentOrders")
-    public BaseResult getRecentOrders(@RequestParam String userID){
+    public BaseResult getRecentOrders(@RequestParam String userID) {
         return new BaseResult(0, orderService.getRecentOrders(userID));
     }
 
@@ -56,6 +48,33 @@ public class OrderController {
     @GetMapping("/getUnpayOrder")
     public BaseResult getUnpayOrder(@RequestParam String orderID) {
         return new BaseResult(0, orderService.getUnpayOrder(orderID));
+    }
+
+    @GetMapping("/getPayLeftTime")
+    public BaseResult getPayLeftTime(@RequestParam String orderID) {
+        return new BaseResult(0, orderService.getPayLeftTime(orderID));
+    }
+
+    @GetMapping("/cancelOrder")
+    public BaseResult cancelOrder(@RequestParam String orderID) {
+        int result = orderService.cancelOrder(orderID);
+        return result == 1 ? new BaseResult(0, "取消订单成功！") : new BaseResult(-1, "取消订单失败！");
+    }
+
+    @GetMapping("/getAllOrders")
+    public BaseResult getAllOrders(@RequestParam String userID) {
+        return new BaseResult(0, orderService.getAllOrders(userID));
+    }
+
+    @GetMapping("/getOrdersByState")
+    public BaseResult getOrdersByState(@RequestParam String userID, @RequestParam String state) {
+        return new BaseResult(0, orderService.getOrdersByState(userID, state));
+    }
+
+    @GetMapping("/refundOrder")
+    public BaseResult refundOrder(@RequestParam String userID,@RequestParam String orderID) {
+        double backMoney = orderService.refundOrder(userID, orderID);
+        return backMoney != -1 ? new BaseResult(0, backMoney) : new BaseResult(-1, "申请退款失败！");
     }
 
 }

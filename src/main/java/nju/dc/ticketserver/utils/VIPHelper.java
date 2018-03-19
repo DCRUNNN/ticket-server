@@ -51,6 +51,14 @@ public class VIPHelper {
     }
 
 
+    public static double refund(int vipLevel, String orderID) {
+        //根据时间 返回退回多少钱
+        double result = 0;
+        return 0;
+
+    }
+
+
     public static double memberPointsToCoupon(int usedMemberPoints) {
         return Double.parseDouble(String.format("%.2f", usedMemberPoints * 0.01));
     }

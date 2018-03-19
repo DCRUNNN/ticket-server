@@ -13,7 +13,6 @@ public class TicketsFinancePO {
     private double paymentRatio;
 
     private String showID;
-    private String orderID;
 
     public TicketsFinancePO() {
     }
@@ -98,13 +97,6 @@ public class TicketsFinancePO {
         this.showID = showID;
     }
 
-    public String getOrderID() {
-        return orderID;
-    }
-
-    public void setOrderID(String orderID) {
-        this.orderID = orderID;
-    }
 
     @Override
     public String toString() {
@@ -119,7 +111,6 @@ public class TicketsFinancePO {
                 ", ticketsIncome=" + ticketsIncome +
                 ", paymentRatio=" + paymentRatio +
                 ", showID='" + showID + '\'' +
-                ", orderID='" + orderID + '\'' +
                 '}';
     }
 }

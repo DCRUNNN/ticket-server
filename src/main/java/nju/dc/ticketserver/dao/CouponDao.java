@@ -10,8 +10,12 @@ public interface CouponDao {
 
     CouponPO getCouponPO(String couponID);
 
+    CouponPO getCouponPOByOrderID(String orderID);
+
     List<CouponPO> getCouponPOByState(String userID, String state);
 
     int addCouponPO(CouponPO couponPO);
+
+    boolean isUsingCoupon(String orderID);
 
 }

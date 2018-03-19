@@ -18,7 +18,6 @@ public class CouponDaoImpl implements CouponDao {
     private JdbcTemplate jdbcTemplate;
 
 
-
     @Override
     public List<CouponPO> getAllCouponPOs(String userID) {
         String sql = "select * from coupon where userID = " + '"' + userID + '"';
@@ -28,9 +27,14 @@ public class CouponDaoImpl implements CouponDao {
 
     @Override
     public CouponPO getCouponPO(String couponID) {
+
+        String checkExistSql = "Select count(1) from coupon where couponID = " + '"' + couponID + '"';
+        int checkExists = jdbcTemplate.queryForObject(checkExistSql, new Object[]{}, Integer.class);
+        if (checkExists == 0) {
+            return null;
+        }
+
         String sql = "select * from coupon where couponID = " + '"' + couponID + '"';
-//        CouponPO po = jdbcTemplate.queryForObject(sql, getCouponPOMapper());
-//        return po == null ? new CouponPO() : po;
         return jdbcTemplate.queryForObject(sql, getCouponPOMapper());
     }
 
@@ -65,6 +69,29 @@ public class CouponDaoImpl implements CouponDao {
         return success ? 1 : 0;
     }
 
+
+    @Override
+    public boolean isUsingCoupon(String orderID) {
+        String checkExistSql = "select count(1) from coupon where orderID = " + '"' + orderID + '"' + " and state=" + '"' + "已使用" + '"';
+        int checkExists = jdbcTemplate.queryForObject(checkExistSql, new Object[]{}, Integer.class);
+        if (checkExists == 0) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    @Override
+    public CouponPO getCouponPOByOrderID(String orderID) {
+        String checkExistSql = "Select count(1) from coupon where orderID = " + '"' + orderID + '"';
+        int checkExists = jdbcTemplate.queryForObject(checkExistSql, new Object[]{}, Integer.class);
+        if (checkExists == 0) {
+            return null;
+        }
+
+        String sql = "select * from coupon where orderID= " + '"' + orderID + '"';
+        return jdbcTemplate.queryForObject(sql, getCouponPOMapper());
+    }
 
     private RowMapper<CouponPO> getCouponPOMapper() {
         return (resultSet, i) -> {

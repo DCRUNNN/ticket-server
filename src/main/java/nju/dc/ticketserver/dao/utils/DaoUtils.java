@@ -47,7 +47,7 @@ public class DaoUtils {
     public String createOrderID() {
         String sql = "select count(*) as total from orders";
         int total = jdbcTemplate.query(sql, resultSet -> resultSet.next() ? resultSet.getInt("total") : 0);
-        return new SimpleDateFormat("yyyyMMdd").format(Date.valueOf(LocalDate.now())) + "-" + formatInteger((total + 1), 6);
+        return "order-" + new SimpleDateFormat("yyyyMMdd").format(Date.valueOf(LocalDate.now())) + "-" + formatInteger((total + 1), 6);
     }
 
     /**

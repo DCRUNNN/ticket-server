@@ -117,39 +117,57 @@ public class ManagerDaoImpl implements ManagerDao {
     }
 
     @Override
-    public int giveMoneyToVenue(OrderPO orderPO) {
-        String sql = "";
-        System.out.println(getPostVenuePO("0000001"));
+    public int giveMoneyToVenue(ShowPO showPO, double paymentRatio) {
 
-        return 0;
+        TicketsFinancePO ticketsFinancePO = createTicketsFinancePO(showPO, paymentRatio);
+        String sql1 = "insert into ticketsFinance(financialID,date,venueID,venueName,venueAddress,totalIncome,venueIncome,ticketsIncome,paymentRatio,showID) values "
+                + "("
+                + '"' + ticketsFinancePO.getFinancialID() + '"' + "," + '"' + ticketsFinancePO.getDate() + '"' + "," + '"' + ticketsFinancePO.getVenueID() + '"'
+                + "," + '"' + ticketsFinancePO.getVenueName() + '"' + "," + '"' + ticketsFinancePO.getVenueAddress() + '"' + "," + '"' + ticketsFinancePO.getTotalIncome() + '"'
+                + "," + '"' + ticketsFinancePO.getVenueIncome() + '"' + "," + '"' + ticketsFinancePO.getTicketsIncome() + '"' + "," + '"' + ticketsFinancePO.getPaymentRatio() + '"'
+                + "," + '"' + ticketsFinancePO.getShowID() + '"'
+                + ")";
+
+//        支付给场馆
+//        手动支付给场馆
+        String sql2 = "update venue set income = income +" + '"' + ticketsFinancePO.getVenueIncome() + '"' + " where venueID = " + '"' + ticketsFinancePO.getVenueID() + '"';
+
+        String[] sqls = new String[2];
+        sqls[0] = sql1;
+        sqls[1] = sql2;
+
+        int[] check = jdbcTemplate.batchUpdate(sqls);
+
+        //如果包括0则这两条插入语句至少有一句不成功，success为false
+        boolean success = !Arrays.asList(check).contains(0);
+//        成功的话返回1
+        return success ? 1 : 0;
     }
 
     @Override
-    public TicketsFinancePO createTicketsFinancePO(OrderPO orderPO) {
+    public TicketsFinancePO createTicketsFinancePO(ShowPO showPO, double paymentRatio) {
 
         TicketsFinancePO po = new TicketsFinancePO();
 
         po.setDate(daoUtils.setSignUpDate());
         po.setFinancialID(daoUtils.createTicketFinanceID());
 
-        double paymentRatio = getManagerPO("458891338@163.com").getPaymentRatio(); //tickets收入的百分比
+//        double paymentRatio = getManagerPO("458891338@163.com").getPaymentRatio(); //tickets收入的百分比
 
         po.setPaymentRatio(paymentRatio);
 
-        po.setTotalIncome(orderPO.getTotalPrice());
+        po.setTotalIncome(showPO.getTotalIncome());
 
-        po.setTicketsIncome(orderPO.getTotalPrice() * paymentRatio);
+        po.setTicketsIncome(showPO.getTotalIncome() * paymentRatio);
 
-        po.setVenueIncome(orderPO.getTotalPrice() - orderPO.getTotalPrice() * paymentRatio);
-        po.setVenueID(orderPO.getVenueID());
+        po.setVenueIncome(showPO.getTotalIncome() - showPO.getTotalIncome() * paymentRatio);
+        po.setVenueID(showPO.getVenueID());
 
-        VenuePO venuePO = venueDao.getVenuePO(orderPO.getVenueID());
+        VenuePO venuePO = venueDao.getVenuePO(showPO.getVenueID());
         po.setVenueAddress(venuePO.getAddress());
         po.setVenueName(venuePO.getVenueName());
 
-        po.setOrderID(orderPO.getOrderID());
-        po.setShowID(orderPO.getShowID());
-
+        po.setShowID(showPO.getShowID());
         return po;
     }
 

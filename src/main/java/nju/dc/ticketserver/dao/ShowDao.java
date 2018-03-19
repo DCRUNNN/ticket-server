@@ -24,4 +24,9 @@ public interface ShowDao {
 
     String getAreaByPrice(String showID, String price);
 
+    double getShowTotalIncome(String showID);
+
+    List<ShowPO> getNeedToPayShows();
+
+
 }

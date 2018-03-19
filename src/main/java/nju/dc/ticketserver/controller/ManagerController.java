@@ -60,4 +60,17 @@ public class ManagerController {
     public BaseResult getVenueModifyApplications() {
         return new BaseResult<>(0, managerService.getVenueModifyApplicationPOs());
     }
+
+    @GetMapping("/giveMoneyToVenue")
+    public BaseResult giveMoneyToVenue(@RequestParam String showID, @RequestParam double paymentRatio) {
+        int result = managerService.giveMoneyToVenue(showID, paymentRatio);
+
+        return result == 1 ? new BaseResult<>(0, "支付成功！") : new BaseResult<>(-1, "支付失败");
+    }
+
+    @GetMapping("/getNeedToPayShows")
+    public BaseResult getNeedToPayShows() {
+        return new BaseResult<>(0, managerService.getNeedToPayShows());
+    }
+
 }

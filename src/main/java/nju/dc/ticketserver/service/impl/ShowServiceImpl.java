@@ -78,6 +78,6 @@ public class ShowServiceImpl implements ShowService {
     @Override
     public String getAreaByPrice(String showID, String price) {
         return showDao.getAreaByPrice(showID, price);
-
     }
+
 }

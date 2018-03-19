@@ -21,6 +21,8 @@ public class ShowPO {
     private int allRow; //数字
     private String seat; // 10/20/30
 
+    private double totalIncome; //演出总收入
+
     public ShowPO() {
     }
 
@@ -144,6 +146,14 @@ public class ShowPO {
         this.seat = seat;
     }
 
+    public double getTotalIncome() {
+        return totalIncome;
+    }
+
+    public void setTotalIncome(double totalIncome) {
+        this.totalIncome = totalIncome;
+    }
+
     @Override
     public String toString() {
         return "ShowPO{" +
@@ -162,6 +172,7 @@ public class ShowPO {
                 ", area='" + area + '\'' +
                 ", allRow=" + allRow +
                 ", seat='" + seat + '\'' +
+                ", totalIncome=" + totalIncome +
                 '}';
     }
 }

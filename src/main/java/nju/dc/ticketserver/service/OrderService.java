@@ -1,5 +1,6 @@
 package nju.dc.ticketserver.service;
 
+import nju.dc.ticketserver.po.CouponPO;
 import nju.dc.ticketserver.po.OrderPO;
 import nju.dc.ticketserver.po.SeatPO;
 
@@ -9,7 +10,7 @@ public interface OrderService {
 
     OrderPO getOrderPO(String orderID);
 
-    int createOrder(OrderPO orderPO);
+    String createOrder(OrderPO orderPO); //返回orderID
 
     double getUserDiscount(String userID, int vipLevel);
 
@@ -18,4 +19,14 @@ public interface OrderService {
     List<OrderPO> getUserUnpayOrders(String userID, String showID);
 
     OrderPO getUnpayOrder(String orderID);
+
+    long getPayLeftTime(String orderID);
+
+    int cancelOrder(String orderID);
+
+    List<OrderPO> getAllOrders(String userID);
+
+    List<OrderPO> getOrdersByState(String userID, String state);
+
+    double refundOrder(String userID, String orderID);
 }

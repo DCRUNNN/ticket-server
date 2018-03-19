@@ -97,6 +97,19 @@ public class ShowDaoImpl implements ShowDao {
         return result.split("-")[0];
     }
 
+    @Override
+    public double getShowTotalIncome(String showID) {
+        String sql = "select totalIncome from shows where showID = " + '"' + showID + '"';
+        return jdbcTemplate.queryForObject(sql, Double.class);
+    }
+
+    @Override
+    public List<ShowPO> getNeedToPayShows() {
+        String sql = "select * from shows S where S.totalIncome<>0 and S.showID not in (select T.showID from ticketsfinance T)";
+        List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
+        return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
+    }
+
     private RowMapper<ShowPO> getShowPOMapper() {
         return (resultSet, i) -> {
             ShowPO po = new ShowPO();
@@ -120,6 +133,8 @@ public class ShowDaoImpl implements ShowDao {
             po.setArea(resultSet.getString("area"));
             po.setAllRow(resultSet.getInt("allRow"));
             po.setSeat(resultSet.getString("seatInfo"));
+
+            po.setTotalIncome(resultSet.getDouble("totalIncome"));
 
             return po;
         };

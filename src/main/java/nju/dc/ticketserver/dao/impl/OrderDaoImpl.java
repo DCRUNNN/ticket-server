@@ -1,7 +1,10 @@
 package nju.dc.ticketserver.dao.impl;
 
 import nju.dc.ticketserver.dao.OrderDao;
+import nju.dc.ticketserver.dao.UserDao;
+import nju.dc.ticketserver.po.CouponPO;
 import nju.dc.ticketserver.po.OrderPO;
+import nju.dc.ticketserver.utils.VIPHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +19,9 @@ public class OrderDaoImpl implements OrderDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public OrderPO getOrderPO(String orderID) {
@@ -32,8 +38,7 @@ public class OrderDaoImpl implements OrderDao {
             tempPO.setTicketsAmount(resultSet.getInt("ticketsAmount"));
             tempPO.setOrderState(resultSet.getString("orderState"));
 
-            String date = resultSet.getString("orderDate");
-            tempPO.setOrderDate(date.substring(0, date.length() - 2));
+            tempPO.setOrderDate(resultSet.getString("orderDate"));
 
             tempPO.setTotalPrice(resultSet.getDouble("totalPrice"));
             tempPO.setUnitPrice(resultSet.getDouble("unitPrice"));
@@ -68,7 +73,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<OrderPO> getRecentOrders(String userID) {
-        String sql = "select * from orders where userID = " + '"' + userID + '"' + " order by orderID DESC limit 6";
+        String sql = "select * from orders where userID = " + '"' + userID + '"' + " order by orderID DESC limit 8";
         List<OrderPO> recentOrderList = jdbcTemplate.query(sql, getOrderPOMapper());
         return recentOrderList.size() == 0 ? new ArrayList<>() : recentOrderList;
     }
@@ -82,9 +87,86 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public OrderPO getUnpayOrder(String orderID) {
-        OrderPO orderPO = getOrderPO(orderID);
-        String sql = "select * from orders where orderID = " + '"' + orderPO.getUserID() + '"' + " and orderState=" + '"' + "待支付" + '"';
+        String sql = "select * from orders where orderID = " + '"' + orderID + '"';
         return jdbcTemplate.queryForObject(sql, getOrderPOMapper());
+    }
+
+    @Override
+    public int cancelOrder(String orderID) {
+        String sql = "update orders set orderState = " + '"' + "已失效" + '"' + " where orderID = " + '"' + orderID + '"';
+        return jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public List<OrderPO> getAllOrders(String userID) {
+        String sql = "select * from orders where userID = " + '"' + userID + '"';
+        List<OrderPO> allOrderList = jdbcTemplate.query(sql, getOrderPOMapper());
+        return allOrderList.size() == 0 ? new ArrayList<>() : allOrderList;
+    }
+
+    @Override
+    public List<OrderPO> getOrdersByState(String userID, String state) {
+        String sql = "select * from orders where userID = " + '"' + userID + '"' + " and orderState = " + '"' + state + '"';
+        List<OrderPO> orderPOList = jdbcTemplate.query(sql, getOrderPOMapper());
+
+        return orderPOList.size() == 0 ? new ArrayList<>() : orderPOList;
+    }
+
+    @Override
+    public double refundOrder(String userID, OrderPO orderPO, CouponPO couponPO) {
+
+        double totalConsumption = userDao.getUserTotalConsumption(userID);
+        int vipLevel = VIPHelper.getVIPLevel(totalConsumption - orderPO.getTotalPrice());
+        int memberPoints = VIPHelper.getVIPMemberPoints(vipLevel, orderPO.getTotalPrice());
+
+        boolean isUsingCoupon = false;
+        if (couponPO.getCouponID() != null) {
+            isUsingCoupon = true;
+        }
+
+        double backMoney = VIPHelper.refund(vipLevel, orderPO.getOrderID());
+
+        //设置用户余额 总消费 会员积分 VIP
+        String sql = "update user set balance = balance + " + '"' + backMoney + '"' + " , totalConsumption = totalConsumption - " + '"' + backMoney + '"'
+                + ", vipLevel = " + vipLevel + " , memberPoints = memberPoints - " + '"' + memberPoints + '"' + " where userID = " + '"' + userID + '"';
+
+        //设置订单状态
+        String sql2 = "update orders set orderState = " + '"' + "已退款" + '"' + " where orderID = " + '"' + orderPO.getOrderID() + '"';
+
+        //设置优惠券状态
+        String sql3 = "";
+        if (isUsingCoupon) {
+            sql3 = "update coupon set usedTime = " + '"' + '"' + ",state = " + '"' + "待使用" + '"'
+                    + " , orderID = " + '"' + '"'
+                    + " where couponID=" + '"' + couponPO.getCouponID() + '"';
+        }
+
+        //设置演出总收入
+        String sql4 = "update shows set totalIncome = totalIncome -" + '"' + backMoney + '"' + "where showID=" + '"' + orderPO.getShowID() + '"';
+
+        //设置座位状态
+        //在service层修改
+
+        String[] sqls = null;
+        if (isUsingCoupon) {
+            sqls = new String[4];
+            sqls[0] = sql;
+            sqls[1] = sql2;
+            sqls[2] = sql3;
+            sqls[3] = sql4;
+        }else{
+            sqls = new String[3];
+            sqls[0] = sql;
+            sqls[1] = sql2;
+            sqls[2] = sql4;
+        }
+
+        int[] check = jdbcTemplate.batchUpdate(sqls);
+
+        //如果包括0则这两条插入语句至少有一句不成功，success为false
+        boolean success = !Arrays.asList(check).contains(0);
+//        成功的话返回退回的金额
+        return success ? backMoney : -1;
     }
 
     private RowMapper<OrderPO> getOrderPOMapper() {

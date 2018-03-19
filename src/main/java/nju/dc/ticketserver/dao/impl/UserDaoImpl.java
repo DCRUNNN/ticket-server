@@ -5,7 +5,6 @@ import nju.dc.ticketserver.dao.UserDao;
 import nju.dc.ticketserver.dao.utils.DaoUtils;
 import nju.dc.ticketserver.po.CouponPO;
 import nju.dc.ticketserver.po.OrderPO;
-import nju.dc.ticketserver.po.TicketsFinancePO;
 import nju.dc.ticketserver.po.UserPO;
 import nju.dc.ticketserver.utils.VIPHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,8 +158,6 @@ public class UserDaoImpl implements UserDao{
             isUsingCoupon = true;
         }
 
-        System.out.println(isUsingCoupon);
-
         double nowPrice = 0;
         if (isUsingCoupon) {
             nowPrice = orderPO.getTotalPrice() * orderPO.getDiscount() - couponPO.getValue();
@@ -184,36 +181,26 @@ public class UserDaoImpl implements UserDao{
                     + " where couponID=" + '"' + couponPO.getCouponID() + '"';
         }
 
+        //设置演出总收入
+        String sql4 = "update shows set totalIncome = totalIncome +" + '"' + nowPrice + '"' + "where showID=" + '"' + orderPO.getShowID() + '"';
+
         // ticketFinance
 
         orderPO.setTotalPrice(nowPrice);
 
-        TicketsFinancePO ticketsFinancePO = managerDao.createTicketsFinancePO(orderPO);
-        String sql4 = "insert into ticketsFinance(financialID,date,venueID,venueName,venueAddress,totalIncome,venueIncome,ticketsIncome,paymentRatio,showID,orderID) values "
-                + "("
-                + '"' + ticketsFinancePO.getFinancialID() + '"' + "," + '"' + ticketsFinancePO.getDate() + '"' + "," + '"' + ticketsFinancePO.getVenueID() + '"'
-                + "," + '"' + ticketsFinancePO.getVenueName() + '"' + "," + '"' + ticketsFinancePO.getVenueAddress() + '"' + "," + '"' + ticketsFinancePO.getTotalIncome() + '"'
-                + "," + '"' + ticketsFinancePO.getVenueIncome() + '"' + "," + '"' + ticketsFinancePO.getTicketsIncome() + '"' + "," + '"' + ticketsFinancePO.getPaymentRatio() + '"'
-                + "," + '"' + ticketsFinancePO.getShowID() + '"' + "," + '"' + ticketsFinancePO.getOrderID() + '"'
-                + ")";
-
-        //支付给场馆
-        String sql5 = "update venue set income = income +" + '"' + ticketsFinancePO.getVenueIncome() + '"' + " where venueID = " + '"' + ticketsFinancePO.getVenueID() + '"';
 
         String[] sqls = null;
         if (isUsingCoupon) {
-            sqls = new String[5];
+            sqls = new String[4];
             sqls[0] = sql;
             sqls[1] = sql2;
             sqls[2] = sql3;
             sqls[3] = sql4;
-            sqls[4] = sql5;
         }else{
-            sqls = new String[4];
+            sqls = new String[3];
             sqls[0] = sql;
             sqls[1] = sql2;
             sqls[2] = sql4;
-            sqls[3] = sql5;
         }
 
         int[] check = jdbcTemplate.batchUpdate(sqls);

@@ -137,6 +137,11 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Override
+    public int setSeatAvailable(ShowSeatPO showSeatPO) {
+        return seatDao.setSeatAvailable(showSeatPO);
+    }
+
+    @Override
     public List<ShowSeatPO> getSoldSeat(String showID, String price) {
         return seatDao.getSoldSeat(showID, showService.getAreaByPrice(showID, price));
     }

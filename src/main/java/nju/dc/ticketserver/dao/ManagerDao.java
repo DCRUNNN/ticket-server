@@ -10,7 +10,7 @@ public interface ManagerDao {
 
     int confirmModifyVenueInfo(String venueID);
 
-    int giveMoneyToVenue(OrderPO orderPO);
+    int giveMoneyToVenue(ShowPO showPO, double paymentRatio);
 
     ManagerPO getManagerPO(String email);
 
@@ -18,6 +18,6 @@ public interface ManagerDao {
 
     List<ModifyApplicationPO> getVenueModifyApplicationPOs();
 
-    TicketsFinancePO createTicketsFinancePO(OrderPO orderPO);
+    TicketsFinancePO createTicketsFinancePO(ShowPO showPO, double paymentRatio);
 
 }
