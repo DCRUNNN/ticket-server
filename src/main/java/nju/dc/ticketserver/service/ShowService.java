@@ -26,4 +26,7 @@ public interface ShowService {
 
     String getAreaByPrice(String showID, String price);
 
+    boolean isShowEnd(String showID);
+
+    boolean isShowStartCheckTicket(String showID);
 }

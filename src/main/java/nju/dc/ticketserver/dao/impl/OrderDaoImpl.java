@@ -25,6 +25,13 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public OrderPO getOrderPO(String orderID) {
+
+        String checkExistSql = "Select count(1) from orders where orderID = " + '"' + orderID + '"';
+        int checkExists = jdbcTemplate.queryForObject(checkExistSql, new Object[]{}, Integer.class);
+        if (checkExists == 0) {
+            return null;
+        }
+
         String sql = "Select * from orders where orderID = " + '"' + orderID + '"';
         OrderPO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
             OrderPO tempPO = new OrderPO();
@@ -47,6 +54,7 @@ public class OrderDaoImpl implements OrderDao {
             //处理seat
             tempPO.setSeat(resultSet.getString("seats"));
 
+            tempPO.setBackMoney(resultSet.getDouble("backMoney"));
             return tempPO;
         });
         return po;
@@ -124,14 +132,14 @@ public class OrderDaoImpl implements OrderDao {
             isUsingCoupon = true;
         }
 
-        double backMoney = VIPHelper.refund(vipLevel, orderPO.getOrderID());
+        double backMoney = VIPHelper.refund(vipLevel, orderPO.getOrderDate(), orderPO.getTotalPrice());
 
         //设置用户余额 总消费 会员积分 VIP
         String sql = "update user set balance = balance + " + '"' + backMoney + '"' + " , totalConsumption = totalConsumption - " + '"' + backMoney + '"'
                 + ", vipLevel = " + vipLevel + " , memberPoints = memberPoints - " + '"' + memberPoints + '"' + " where userID = " + '"' + userID + '"';
 
         //设置订单状态
-        String sql2 = "update orders set orderState = " + '"' + "已退款" + '"' + " where orderID = " + '"' + orderPO.getOrderID() + '"';
+        String sql2 = "update orders set orderState = " + '"' + "已退款" + '"' + ", backMoney = " + '"' + backMoney + '"' + " where orderID = " + '"' + orderPO.getOrderID() + '"';
 
         //设置优惠券状态
         String sql3 = "";
@@ -169,6 +177,24 @@ public class OrderDaoImpl implements OrderDao {
         return success ? backMoney : -1;
     }
 
+    @Override
+    public int directPurchaseTicket(OrderPO orderPO) {
+
+        double nowPrice = orderPO.getTotalPrice() * orderPO.getDiscount();
+
+        String sql = "insert into orders(orderID,userID,username,venueID,showID,showName,seats,purchaseMethod,ticketsAmount,"
+                + "orderState,orderDate,totalPrice,unitPrice,discount) values "
+                + "("
+                + '"' + orderPO.getOrderID() + '"' + "," + '"' + orderPO.getUserID() + '"' + "," + '"' + orderPO.getUsername() + '"'
+                + "," + '"' + orderPO.getVenueID() + '"' + "," + '"' + orderPO.getShowID() + '"' + "," + '"' + orderPO.getShowName() + '"' + "," + '"' + '"'
+                + "," + '"' + orderPO.getPurchaseMethod() + '"' + "," + '"' + orderPO.getTicketsAmount() + '"' + "," + '"' + orderPO.getOrderState() + '"'
+                + "," + '"' + orderPO.getOrderDate() + '"' + "," + '"' + nowPrice + '"' + "," + '"' + orderPO.getUnitPrice() + '"'
+                + "," + '"' + orderPO.getDiscount() + '"'
+                + ")";
+
+        return jdbcTemplate.update(sql);
+    }
+
     private RowMapper<OrderPO> getOrderPOMapper() {
         return (resultSet, i) -> {
             OrderPO po = new OrderPO();
@@ -186,6 +212,8 @@ public class OrderDaoImpl implements OrderDao {
             po.setTotalPrice(resultSet.getDouble("totalPrice"));
             po.setUnitPrice(resultSet.getDouble("unitPrice"));
             po.setDiscount(resultSet.getDouble("discount"));
+            po.setBackMoney(resultSet.getDouble("backMoney"));
+
             return po;
         };
     }

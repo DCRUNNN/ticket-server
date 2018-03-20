@@ -77,4 +77,15 @@ public class OrderController {
         return backMoney != -1 ? new BaseResult(0, backMoney) : new BaseResult(-1, "申请退款失败！");
     }
 
+    @GetMapping("/directPurchaseOrder")
+    public BaseResult directPurchaseOrder(@RequestParam String userID, @RequestParam String showID, @RequestParam String unitPrice, @RequestParam int ticketAmount) {
+        String result = orderService.directPurchaseTicket(userID, showID, unitPrice, ticketAmount);
+        if (result.startsWith("order")) {
+            return new BaseResult<>(0, result);
+        } else {
+            return new BaseResult<>(-1, result);
+        }
+    }
+
+
 }

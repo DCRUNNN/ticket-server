@@ -68,6 +68,15 @@ public class SeatDaoImpl implements SeatDao {
         return jdbcTemplate.query(sql, getShowSeatMapper());
     }
 
+    @Override
+    public boolean haveEnoughSeat(String showID, String area, int ticketAmount) {
+        String sql = "select count(*) from showSeat where showID = " + '"' + showID + '"' + " and area = " + '"' + area + '"' + " and state = " + '"' + "可售" + '"';
+
+        int seats = jdbcTemplate.queryForObject(sql, Integer.class);
+
+        return seats > ticketAmount ? true : false;
+    }
+
     private RowMapper<ShowSeatPO> getShowSeatMapper() {
         return (resultSet, i) -> {
             ShowSeatPO po = new ShowSeatPO();

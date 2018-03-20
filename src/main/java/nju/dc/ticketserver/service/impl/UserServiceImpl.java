@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
         userPO.setState("未激活");
         userPO.setVIP(true);
         userPO.setMemberPoints(0);
+        userPO.setVipLevel(1);
 
         //保存成功则通过线程的方式给用户发送一封邮件
         if(addUser(userPO)>0){

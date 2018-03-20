@@ -5,8 +5,10 @@ import nju.dc.ticketserver.dao.VenueDao;
 import nju.dc.ticketserver.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -112,5 +114,41 @@ public class VenueDaoImpl implements VenueDao {
             return tempPO;
         });
         return po;
+    }
+
+    @Override
+    public List<OrderPO> getVenueRecentOrders(String venueID) {
+        String sql = "select * from orders where venueID = " + '"' + venueID + '"' + " order by orderID DESC limit 8";
+        List<OrderPO> recentOrderList = jdbcTemplate.query(sql, getOrderPOMapper());
+        return recentOrderList.size() == 0 ? new ArrayList<>() : recentOrderList;
+    }
+
+    @Override
+    public int checkTicket(String orderID) {
+        String sql = "update orders set orderState = " + '"' + "进行中" + '"' + " where orderID = " + '"' + orderID + '"';
+        return jdbcTemplate.update(sql);
+    }
+
+    private RowMapper<OrderPO> getOrderPOMapper() {
+        return (resultSet, i) -> {
+            OrderPO po = new OrderPO();
+            po.setOrderID(resultSet.getString("orderID"));
+            po.setUserID(resultSet.getString("userID"));
+            po.setUsername(resultSet.getString("username"));
+            po.setVenueID(resultSet.getString("venueID"));
+            po.setShowID(resultSet.getString("showID"));
+            po.setShowName(resultSet.getString("showName"));
+            po.setSeat(resultSet.getString("seats"));
+            po.setPurchaseMethod(resultSet.getString("purchaseMethod"));
+            po.setTicketsAmount(resultSet.getInt("ticketsAmount"));
+            po.setOrderState(resultSet.getString("orderState"));
+            po.setOrderDate(resultSet.getString("orderDate"));
+            po.setTotalPrice(resultSet.getDouble("totalPrice"));
+            po.setUnitPrice(resultSet.getDouble("unitPrice"));
+            po.setDiscount(resultSet.getDouble("discount"));
+            po.setBackMoney(resultSet.getDouble("backMoney"));
+
+            return po;
+        };
     }
 }

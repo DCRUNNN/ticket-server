@@ -14,6 +14,9 @@ public interface VenueDao {
 
     VenuePO getVenuePO(String venueID);
 
+    List<OrderPO> getVenueRecentOrders(String venueID);
+
+    int checkTicket(String orderID);
 
 
 }

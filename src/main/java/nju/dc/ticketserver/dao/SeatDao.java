@@ -21,4 +21,6 @@ public interface SeatDao {
 
     List<ShowSeatPO> getSoldSeat(String showID, String area);
 
+    boolean haveEnoughSeat(String showID, String area, int ticketAmount);
+
 }

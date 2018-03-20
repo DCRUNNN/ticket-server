@@ -29,4 +29,7 @@ public interface OrderService {
     List<OrderPO> getOrdersByState(String userID, String state);
 
     double refundOrder(String userID, String orderID);
+
+    String directPurchaseTicket(String userID, String showID, String unitPrice, int ticketAmount);
+
 }

@@ -25,4 +25,7 @@ public interface OrderDao {
 
     double refundOrder(String userID, OrderPO orderPO, CouponPO couponPO);
 
+    int directPurchaseTicket(OrderPO orderPO);
+
+
 }

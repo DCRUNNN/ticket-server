@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ShowServiceImpl implements ShowService {
@@ -80,4 +79,58 @@ public class ShowServiceImpl implements ShowService {
         return showDao.getAreaByPrice(showID, price);
     }
 
+    @Override
+    public boolean isShowEnd(String showID) {
+        ShowPO showPO = showDao.getShowPOByID(showID);
+        String beginDate = showPO.getShowDate();
+        beginDate = beginDate.substring(0, 11) + beginDate.substring(beginDate.length() - 5); //演出开始时间
+
+        Calendar c = Calendar.getInstance();//获得一个日历的实例
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        Date nowDate = new Date();
+        Date showBegin = new Date();
+        try{
+            nowDate = sdf.parse(sdf.format(nowDate));//当前日期
+            showBegin = sdf.parse(beginDate);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        c.setTime(showBegin);//设置日历时间
+        c.add(Calendar.HOUR, 2);//在日历的小时上增加2个小时
+
+        boolean result = false;
+        if (c.getTime().before(nowDate)) {
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isShowStartCheckTicket(String showID) {
+        ShowPO showPO = showDao.getShowPOByID(showID);
+        String beginDate = showPO.getShowDate();
+        beginDate = beginDate.substring(0, 11) + beginDate.substring(beginDate.length() - 5); //演出开始时间
+
+        Calendar c = Calendar.getInstance();//获得一个日历的实例
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        Date nowDate = new Date();
+        Date showBegin = new Date();
+        try{
+            nowDate = sdf.parse(sdf.format(nowDate));//当前日期
+            showBegin = sdf.parse(beginDate);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        c.setTime(showBegin);//设置日历时间
+
+        c.add(Calendar.HOUR, -2);//在日历的小时上减去2个小时
+
+        boolean result = false;
+        if (c.getTime().before(nowDate)) {
+            result = true;
+        }
+        return result;
+    }
 }

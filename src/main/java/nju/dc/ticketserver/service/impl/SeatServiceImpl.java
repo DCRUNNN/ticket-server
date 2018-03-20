@@ -146,6 +146,11 @@ public class SeatServiceImpl implements SeatService {
         return seatDao.getSoldSeat(showID, showService.getAreaByPrice(showID, price));
     }
 
+    @Override
+    public boolean haveEnoughSeat(String showID, String area, int ticketAmount) {
+        return seatDao.haveEnoughSeat(showID, area, ticketAmount);
+    }
+
     private String formatInteger(int i, int length) {
         return String.format("%0" + length + "d", i);
     }

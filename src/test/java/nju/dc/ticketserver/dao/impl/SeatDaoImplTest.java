@@ -53,4 +53,9 @@ public class SeatDaoImplTest {
         System.out.println(seatDao.setSeatOccupied(po));
     }
 
+    @Test
+    public void haveEnoughSeat() throws Exception {
+        System.out.println(seatDao.haveEnoughSeat("show-000004", "A", 4));
+    }
+
 }

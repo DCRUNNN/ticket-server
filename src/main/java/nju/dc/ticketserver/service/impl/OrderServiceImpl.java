@@ -247,4 +247,58 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderPO> getOrdersByState(String userID, String state) {
         return orderDao.getOrdersByState(userID, state);
     }
+
+    @Override
+    public String directPurchaseTicket(String userID, String showID, String unitPrice, int ticketAmount) {
+
+        String area = showService.getAreaByPrice(showID, unitPrice + "");
+
+        boolean haveEnoughSeat = seatService.haveEnoughSeat(showID, area, ticketAmount);
+
+        if (haveEnoughSeat) {
+            OrderPO orderPO = new OrderPO();
+
+            orderPO.setTotalPrice(Double.parseDouble(unitPrice) * ticketAmount);
+
+            //检查账户余额
+            UserPO userPO = userService.getUserPOByUserID(userID);
+            double balance = userService.getUserBalance(userID);
+            double couponMaxValue = userService.getUserCouponMaxValue(userID);
+            double discount = VIPHelper.getVIPDiscount(userPO.getVipLevel());
+
+            if ((balance + couponMaxValue) < orderPO.getTotalPrice() * discount) {
+                return "余额不足！";
+            }
+            orderPO.setOrderState("待支付");
+            orderPO.setDiscount(discount);
+            orderPO.setOrderDate(daoUtils.setSignUpDate());
+            orderPO.setOrderID(daoUtils.createOrderID());
+            //优惠
+            orderPO.setTotalPrice(orderPO.getTotalPrice() * discount);
+
+
+            ShowPO showPO = showService.getShowPOByID(showID);
+
+            orderPO.setShowName(showPO.getShowName());
+            orderPO.setUnitPrice(Double.parseDouble(unitPrice));
+            orderPO.setTicketsAmount(ticketAmount);
+            orderPO.setPurchaseMethod("立即购买");
+            orderPO.setSeat("待分配");
+
+            orderPO.setShowID(showID);
+            orderPO.setVenueID(showPO.getVenueID());
+            orderPO.setUserID(userID);
+            orderPO.setUsername(userPO.getUsername());
+
+            int result = orderDao.directPurchaseTicket(orderPO);
+
+            if (result == 1) {
+                return orderPO.getOrderID();
+            }else{
+                return "创建订单失败！";
+            }
+        } else {
+            return "座位数量不足！";
+        }
+    }
 }

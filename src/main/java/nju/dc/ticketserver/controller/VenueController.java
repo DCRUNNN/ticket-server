@@ -62,7 +62,7 @@ public class VenueController {
         boolean equal = EncryptHelper.checkPassword(venuePO.getPassword(), checkVenuePO.getPassword());
         if (equal) {
             return new BaseResult(0, checkVenuePO);
-        }else{
+        } else {
             return new BaseResult(2, "userName and password do not match!");
         }
     }
@@ -72,4 +72,34 @@ public class VenueController {
         return new BaseResult<>(0, venueService.getVenuePO(venueID));
     }
 
+    @GetMapping("getVenueRecentOrders")
+    public BaseResult getVenueRecentOrders(@RequestParam String venueID) {
+        return new BaseResult(0, venueService.getVenueRecentOrders(venueID));
+    }
+
+    @GetMapping("/checkTicket")
+    public BaseResult checkTicket(@RequestParam String orderID,@RequestParam String venueID) {
+
+        int result = venueService.checkTicket(orderID, venueID);
+
+        if (result == 1) {
+            return new BaseResult(0, "检票登记成功！");
+        } else if (result == -2) {
+            return new BaseResult(-2, "订单不存在！");
+        } else if (result == -3) {
+            return new BaseResult(-3, "项目已结束！");
+        } else if (result == -4) {
+            return new BaseResult(-4, "您已检票登记！");
+        } else if (result == -5) {
+            return new BaseResult(-5, "尚未到检票时间！");
+        } else if (result == -6) {
+            return new BaseResult(-6, "该订单不是本场馆的订单！");
+        }else if (result == -7) {
+            return new BaseResult(-7, "该订单已失效！");
+        }else if (result == -8) {
+            return new BaseResult(-8, "该订单尚未支付！");
+        } else {
+            return new BaseResult(-1, "检票登记失败！");
+        }
+    }
 }

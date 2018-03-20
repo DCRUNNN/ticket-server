@@ -26,4 +26,6 @@ public interface SeatService {
 
     List<ShowSeatPO> getSoldSeat(String showID, String price);
 
+    boolean haveEnoughSeat(String showID, String area, int ticketAmount);
+
 }

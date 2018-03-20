@@ -21,6 +21,7 @@ public class OrderPO {
     private double totalPrice; //总价
     private double unitPrice; //一张票的单价
     private double discount; //优惠
+    private double backMoney; //退回金额
 
     public OrderPO() {
     }
@@ -137,6 +138,14 @@ public class OrderPO {
         this.discount = discount;
     }
 
+    public double getBackMoney() {
+        return backMoney;
+    }
+
+    public void setBackMoney(double backMoney) {
+        this.backMoney = backMoney;
+    }
+
     @Override
     public String toString() {
         return "OrderPO{" +
@@ -154,6 +163,7 @@ public class OrderPO {
                 ", totalPrice=" + totalPrice +
                 ", unitPrice=" + unitPrice +
                 ", discount=" + discount +
+                ", backMoney=" + backMoney +
                 '}';
     }
 }
