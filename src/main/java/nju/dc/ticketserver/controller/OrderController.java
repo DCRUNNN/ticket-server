@@ -26,7 +26,16 @@ public class OrderController {
         } else {
             return new BaseResult<>(-1, result);
         }
+    }
 
+    @PostMapping("/createSpotPurchaseOrder")
+    public BaseResult createSpotPurchaseOrder(@RequestBody OrderPO orderPO) {
+        String result = orderService.createSpotPurchaseOrder(orderPO);
+        if (result.startsWith("order")) {
+            return new BaseResult<>(0, result);
+        } else {
+            return new BaseResult<>(-1, result);
+        }
     }
 
     @GetMapping("/getUserDiscount")

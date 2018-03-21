@@ -57,4 +57,18 @@ public class ShowController {
         return new BaseResult(0, showService.getShowPOByCityAndCategory(city, category));
     }
 
+    @GetMapping("/getShowPOByVenueID")
+    public BaseResult getShowPOByVenueID(@RequestParam String venueID) {
+        return new BaseResult(0, showService.getShowByVenueID(venueID));
+    }
+
+    @GetMapping("/getVenueOnSaleShow")
+    public BaseResult getVenueOnSaleShow(@RequestParam String venueID) {
+        return new BaseResult(0, showService.getVenueOnSaleShow(venueID));
+    }
+
+    @GetMapping("/getVenueNeedToArrangeShow")
+    public BaseResult getVenueNeedToArrangeShow(@RequestParam String venueID) {
+        return new BaseResult(0, showService.getVenueNeedToArrangeShow(venueID));
+    }
 }

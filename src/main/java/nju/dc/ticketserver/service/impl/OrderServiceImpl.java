@@ -71,6 +71,11 @@ public class OrderServiceImpl implements OrderService {
             showSeatPOList.add(showSeatPO);
         }
 
+//        boolean isSpotPurchase = false;
+//        if (orderPO.getUserID().equals("现场购票用户")) {
+//            isSpotPurchase = true;
+//        }
+
         //检查账户余额
         UserPO userPO = userService.getUserPOByUserID(orderPO.getUserID());
         double balance = userService.getUserBalance(userPO.getUserID());
@@ -87,7 +92,61 @@ public class OrderServiceImpl implements OrderService {
         orderPO.setSeat(orderPO.getSeat());
         orderPO.setOrderID(daoUtils.createOrderID());
         //优惠
-        orderPO.setTotalPrice(orderPO.getTotalPrice() * discount);
+//        orderPO.setTotalPrice(orderPO.getTotalPrice() * discount);
+        //优惠在dao层写
+
+        //设置座位状态
+
+        //可以优化 一次修改多个 而不是多次修改，每次修改一个
+        for (ShowSeatPO showSeatPO : showSeatPOList) {
+            int check = seatService.setSeatOccupied(showSeatPO);
+            if (check == 0) {
+                return "修改座位状态失败！";
+            }
+        }
+
+        int result = orderDao.createOrder(orderPO);
+
+        if (result == 1) {
+            return orderPO.getOrderID();
+        }else{
+
+            return "创建订单失败！";
+        }
+    }
+
+
+    @Override
+    public String createSpotPurchaseOrder(OrderPO orderPO) {
+        //检查座位状态
+        String[] seatInfo = orderPO.getSeat().split(",");   // 如355-3排9座,688-4排9座
+        List<ShowSeatPO> showSeatPOList = new ArrayList<>();
+        boolean isSeatAvailable = false;
+        for (String seat : seatInfo) {
+            String area = showService.getAreaByPrice(orderPO.getShowID(), seat.split("-")[0]);
+            String temp1 = seat.split("-")[1]; // 3排9座
+            int row = Integer.parseInt(temp1.split("排")[0]);
+            int theSeat = Integer.parseInt(subString(temp1, "排", "座"));
+            ShowSeatPO showSeatPO = new ShowSeatPO();
+            showSeatPO.setShowID(orderPO.getShowID());
+            showSeatPO.setVenueID(orderPO.getVenueID());
+            showSeatPO.setArea(area);
+            showSeatPO.setRow(row);
+            showSeatPO.setSeat(theSeat);
+            isSeatAvailable = seatService.isSeatAvailable(showSeatPO);
+            if (isSeatAvailable == false) {
+                return "座位已售出！";
+            }
+            showSeatPOList.add(showSeatPO);
+        }
+
+        orderPO.setOrderState("待支付");
+        orderPO.setDiscount(1);
+        orderPO.setOrderDate(daoUtils.setSignUpDate());
+        orderPO.setSeat(orderPO.getSeat());
+        orderPO.setOrderID(daoUtils.createOrderID());
+
+        orderPO.setPurchaseMethod("现场购票");
 
         //设置座位状态
 
@@ -273,9 +332,8 @@ public class OrderServiceImpl implements OrderService {
             orderPO.setDiscount(discount);
             orderPO.setOrderDate(daoUtils.setSignUpDate());
             orderPO.setOrderID(daoUtils.createOrderID());
-            //优惠
-            orderPO.setTotalPrice(orderPO.getTotalPrice() * discount);
-
+            //优惠在dao层写
+            orderPO.setTotalPrice(orderPO.getTotalPrice());
 
             ShowPO showPO = showService.getShowPOByID(showID);
 
@@ -301,4 +359,10 @@ public class OrderServiceImpl implements OrderService {
             return "座位数量不足！";
         }
     }
+
+    @Override
+    public List<OrderPO> getNeedToArrangeSeatOrders(String showID) {
+        return orderDao.getNeedToArrangeSeatOrders(showID);
+    }
+
 }

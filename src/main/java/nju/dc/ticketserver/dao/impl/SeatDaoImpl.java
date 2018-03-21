@@ -55,6 +55,8 @@ public class SeatDaoImpl implements SeatDao {
         return jdbcTemplate.update(sql, new Object[]{"已售", showSeatPO.getShowID(), showSeatPO.getVenueID(), showSeatPO.getArea(), showSeatPO.getRow(), showSeatPO.getSeat()}, types);
     }
 
+
+
     @Override
     public int setSeatAvailable(ShowSeatPO showSeatPO) {
         String sql = "update showSeat set state= ? where showID =? and venueID=? and area=? and row=? and seat=?";
@@ -75,6 +77,13 @@ public class SeatDaoImpl implements SeatDao {
         int seats = jdbcTemplate.queryForObject(sql, Integer.class);
 
         return seats > ticketAmount ? true : false;
+    }
+
+    @Override
+    public List<ShowSeatPO> getAvailableSeat(String showID, String area) {
+        String sql = "select * from showSeat where showID = " + '"' + showID + '"' + " and area = " + '"' + area + '"' + " and state = " + '"' + "可售" + '"';
+        List<ShowSeatPO> showSeatPOList = jdbcTemplate.query(sql, getShowSeatMapper());
+        return showSeatPOList.size() == 0 ? new ArrayList<>() : showSeatPOList;
     }
 
     private RowMapper<ShowSeatPO> getShowSeatMapper() {

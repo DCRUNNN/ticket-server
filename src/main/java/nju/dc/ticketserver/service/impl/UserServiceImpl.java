@@ -12,7 +12,10 @@ import nju.dc.ticketserver.utils.ActiveCodeHelper;
 import nju.dc.ticketserver.utils.EncryptHelper;
 import nju.dc.ticketserver.utils.MailHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -137,5 +140,76 @@ public class UserServiceImpl implements UserService {
             couponPO = new CouponPO();
         }
         return userDao.payOrder(userID, orderPO, couponPO);
+    }
+
+
+    @Override
+    public int spotPurchase(String userID, String orderID) {
+        //此时用户不是会员，ID是 现场购票用户
+        OrderPO orderPO = orderService.getOrderPO(orderID);
+        //自然也没有优惠券
+        return userDao.spotPurchase(userID, orderPO);
+    }
+
+    @Override
+    public int[] getUserOrderTypesInfo(String userID) {
+        int[] result = new int[6];
+        List<OrderPO> userOrderLists = orderService.getAllOrders(userID);
+
+        int unpay = 0;
+        int paied = 0;
+        int going = 0;
+        int done = 0;
+        int inValid = 0;
+        int back = 0;
+        for (OrderPO order : userOrderLists) {
+            switch(order.getOrderState()){
+                case "待支付":
+                    unpay++;
+                    break;
+                case "已支付":
+                    paied++;
+                    break;
+                case "进行中":
+                    going++;
+                    break;
+                case "已完成":
+                    done++;
+                    break;
+                case "已失效":
+                    inValid++;
+                    break;
+                case "已退款":
+                    back++;
+                    break;
+            }
+        }
+
+        result[0] = unpay;
+        result[1] = paied;
+        result[2] = going;
+        result[3] = done;
+        result[4] = inValid;
+        result[5] = back;
+        return result;
+    }
+
+    @Override
+    public String[][] getOrderPriceInfo(String userID) {
+        List<OrderPO> orderPOList = orderService.getAllOrders(userID);
+
+        String[][] result = new String[2][];
+
+        String[] date = new String[orderPOList.size()];
+        String[] price = new String[orderPOList.size()];
+
+        for (int i = 0; i < orderPOList.size(); i++) {
+            date[i] = orderPOList.get(i).getOrderDate();
+            price[i] = orderPOList.get(i).getTotalPrice() + "";
+        }
+
+        result[0] = date;
+        result[1] = price;
+        return result;
     }
 }

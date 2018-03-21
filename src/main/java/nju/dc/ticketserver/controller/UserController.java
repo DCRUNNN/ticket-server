@@ -28,7 +28,7 @@ public class UserController {
         return result == 1 ? new BaseResult<>(0, "Active User Successfully!") : new BaseResult<>(-1, "Fail to active user!");
     }
 
-    @PostMapping("/cancelVIP")
+    @GetMapping("/cancelVIP")
     public BaseResult cancelVIP(@RequestParam String userID) {
 
         int result = userService.cancelVIP(userID);
@@ -87,4 +87,22 @@ public class UserController {
         int result = userService.payOrder(userID, orderID, couponID);
         return result == 1 ? new BaseResult<>(0, "Pay Order Successfully!") : new BaseResult<>(-1, "Fail to pay order!");
     }
+
+    @GetMapping("/confirmSpotPayOrder")
+    public BaseResult confirmSpotPayOrder(@RequestParam String userID, @RequestParam String orderID) {
+        int result = userService.spotPurchase(userID, orderID);
+        return result == 1 ? new BaseResult<>(0, "Pay Order Successfully!") : new BaseResult<>(-1, "Fail to pay order!");
+    }
+
+    @GetMapping("/getUserOrderTypesInfo")
+    public BaseResult getUserOrderTypesInfo(@RequestParam String userID) {
+        return new BaseResult(0, userService.getUserOrderTypesInfo(userID));
+    }
+
+    @GetMapping("/getOrderPriceInfo")
+    public BaseResult getOrderPriceInfo(@RequestParam String userID) {
+        return new BaseResult(0, userService.getOrderPriceInfo(userID));
+    }
+
+
 }

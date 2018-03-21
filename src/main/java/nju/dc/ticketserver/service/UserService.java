@@ -32,4 +32,10 @@ public interface UserService {
     double getUserCouponMaxValue(String userID);
 
     int payOrder(String userID, String orderID, String couponID);
+
+    int spotPurchase(String userID, String orderID);
+
+    int[] getUserOrderTypesInfo(String userID);
+
+    String[][] getOrderPriceInfo(String userID);
 }

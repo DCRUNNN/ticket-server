@@ -22,11 +22,15 @@ public interface ShowDao {
 
     List<String> getAllCities();
 
+    List<ShowPO> getShowPOByVenueID(String venueID);
+
+    List<ShowPO> getVenueOnSaleShow(String venueID);
+
     String getAreaByPrice(String showID, String price);
 
     double getShowTotalIncome(String showID);
 
     List<ShowPO> getNeedToPayShows();
 
-
+    List<ShowPO> getVenueNeedToArrangeShow(String venueID);
 }

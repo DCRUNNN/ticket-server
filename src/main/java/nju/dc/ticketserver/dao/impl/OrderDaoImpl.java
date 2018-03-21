@@ -186,12 +186,25 @@ public class OrderDaoImpl implements OrderDao {
                 + "orderState,orderDate,totalPrice,unitPrice,discount) values "
                 + "("
                 + '"' + orderPO.getOrderID() + '"' + "," + '"' + orderPO.getUserID() + '"' + "," + '"' + orderPO.getUsername() + '"'
-                + "," + '"' + orderPO.getVenueID() + '"' + "," + '"' + orderPO.getShowID() + '"' + "," + '"' + orderPO.getShowName() + '"' + "," + '"' + '"'
+                + "," + '"' + orderPO.getVenueID() + '"' + "," + '"' + orderPO.getShowID() + '"' + "," + '"' + orderPO.getShowName() + '"' + "," + '"' + orderPO.getSeat() + '"'
                 + "," + '"' + orderPO.getPurchaseMethod() + '"' + "," + '"' + orderPO.getTicketsAmount() + '"' + "," + '"' + orderPO.getOrderState() + '"'
                 + "," + '"' + orderPO.getOrderDate() + '"' + "," + '"' + nowPrice + '"' + "," + '"' + orderPO.getUnitPrice() + '"'
                 + "," + '"' + orderPO.getDiscount() + '"'
                 + ")";
 
+        return jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public List<OrderPO> getNeedToArrangeSeatOrders(String showID) {
+        String sql = "select * from orders where showID = " + '"' + showID + '"' + " and seats = " + '"' + "待分配" + '"' + " and orderState = " + '"' + "已支付" + '"';
+        List<OrderPO> orderPOList = jdbcTemplate.query(sql, getOrderPOMapper());
+        return orderPOList.size() == 0 ? new ArrayList<>() : orderPOList;
+    }
+
+    @Override
+    public int updateOrderSeat(String orderID, String seat) {
+        String sql = "update orders set seats = " + '"' + seat + '"' + " where orderID = " + '"' + orderID + '"';
         return jdbcTemplate.update(sql);
     }
 

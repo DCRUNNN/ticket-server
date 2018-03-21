@@ -123,6 +123,7 @@ public class ShowServiceImpl implements ShowService {
         }catch(Exception e){
             e.printStackTrace();
         }
+
         c.setTime(showBegin);//设置日历时间
 
         c.add(Calendar.HOUR, -2);//在日历的小时上减去2个小时
@@ -132,5 +133,53 @@ public class ShowServiceImpl implements ShowService {
             result = true;
         }
         return result;
+    }
+
+    @Override
+    public List<ShowPO> getShowByVenueID(String venueID) {
+        return showDao.getShowPOByVenueID(venueID);
+    }
+
+    @Override
+    public List<ShowPO> getVenueOnSaleShow(String venueID) {
+
+        return showDao.getVenueOnSaleShow(venueID);
+    }
+
+    @Override
+    public List<ShowPO> getVenueNeedToArrangeShow(String venueID) {
+        List<ShowPO> allShowPOList = showDao.getVenueNeedToArrangeShow(venueID);
+
+        List<ShowPO> resultList = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();//获得一个日历的实例
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        Date nowDate = new Date();
+        Date showBegin = new Date();
+
+        for (ShowPO showPO : allShowPOList) {
+            String beginDate = showPO.getShowDate();
+            beginDate = beginDate.substring(0, 11) + beginDate.substring(beginDate.length() - 5); //演出开始时间
+
+            try{
+                nowDate = sdf.parse(sdf.format(nowDate));//当前日期
+                showBegin = sdf.parse(beginDate);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            c.setTime(showBegin);//设置日历时间
+
+//            c.add(Calendar.WEEK_OF_YEAR, -2);//在日历的小时上减去2周
+
+            c.set(Calendar.DATE, c.get(Calendar.DATE) - 14);
+
+            if (c.getTime().before(nowDate)) {
+                resultList.add(showPO);
+            }
+        }
+
+        return resultList;
     }
 }

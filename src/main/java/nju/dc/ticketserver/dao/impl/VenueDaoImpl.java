@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class VenueDaoImpl implements VenueDao {
@@ -127,6 +128,20 @@ public class VenueDaoImpl implements VenueDao {
     public int checkTicket(String orderID) {
         String sql = "update orders set orderState = " + '"' + "进行中" + '"' + " where orderID = " + '"' + orderID + '"';
         return jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public List<Map<String, Object>> getHotShows(String venueID) {
+        String sql = "select count(*) as total,showID from orders where venueID = " + '"' + venueID + '"' + " group by showID order by total limit 4";
+        List<Map<String, Object>> map = jdbcTemplate.queryForList(sql);
+        return map;
+    }
+
+    @Override
+    public List<OrderPO> getVenueAllOrders(String venueID) {
+        String sql = "select * from orders where venueID = " + '"' + venueID + '"';
+        List<OrderPO> orderPOList = jdbcTemplate.query(sql, getOrderPOMapper());
+        return orderPOList.size() == 0 ? new ArrayList<>() : orderPOList;
     }
 
     private RowMapper<OrderPO> getOrderPOMapper() {

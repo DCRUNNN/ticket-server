@@ -32,4 +32,9 @@ public interface OrderService {
 
     String directPurchaseTicket(String userID, String showID, String unitPrice, int ticketAmount);
 
+    String createSpotPurchaseOrder(OrderPO orderPO);
+
+    List<OrderPO> getNeedToArrangeSeatOrders(String showID);
+
+
 }

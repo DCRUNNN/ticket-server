@@ -27,5 +27,8 @@ public interface OrderDao {
 
     int directPurchaseTicket(OrderPO orderPO);
 
+    List<OrderPO> getNeedToArrangeSeatOrders(String showID);
+
+    int updateOrderSeat(String orderID, String seat);
 
 }

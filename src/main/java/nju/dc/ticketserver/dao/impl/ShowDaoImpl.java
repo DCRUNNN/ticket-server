@@ -110,6 +110,31 @@ public class ShowDaoImpl implements ShowDao {
         return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
     }
 
+    @Override
+    public List<ShowPO> getShowPOByVenueID(String venueID) {
+        String sql = "select * from shows where venueID = " + '"' + venueID + '"';
+
+        List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
+
+        return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
+    }
+
+    @Override
+    public List<ShowPO> getVenueOnSaleShow(String venueID) {
+        String sql = "select * from shows where venueID = " + '"' + venueID + '"'+" and state = "+'"'+"售票中"+'"';
+
+        List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
+
+        return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
+    }
+
+    @Override
+    public List<ShowPO> getVenueNeedToArrangeShow(String venueID) {
+        String sql = "select * from shows S where S.showID in (select showID from orders where venueID = " + '"' + venueID + '"' + " and seats=" + '"' + "待分配" + '"' + ")";
+        List<ShowPO> showPOList = jdbcTemplate.query(sql, getShowPOMapper());
+        return showPOList.size() == 0 ? new ArrayList<>() : showPOList;
+    }
+
     private RowMapper<ShowPO> getShowPOMapper() {
         return (resultSet, i) -> {
             ShowPO po = new ShowPO();

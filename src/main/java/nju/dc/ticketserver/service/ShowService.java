@@ -29,4 +29,10 @@ public interface ShowService {
     boolean isShowEnd(String showID);
 
     boolean isShowStartCheckTicket(String showID);
+
+    List<ShowPO> getShowByVenueID(String venueID);
+
+    List<ShowPO> getVenueOnSaleShow(String venueID);
+
+    List<ShowPO> getVenueNeedToArrangeShow(String venueID);
 }

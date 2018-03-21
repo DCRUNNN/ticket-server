@@ -17,4 +17,10 @@ public interface VenueService {
     List<OrderPO> getVenueRecentOrders(String venueID);
 
     int checkTicket(String orderID, String venueID);
+
+    String arrangeSeat(String showID);
+
+    String[][] getHotShows(String venueID);
+
+    int[] getUserPurchaseMethod(String venueID);
 }

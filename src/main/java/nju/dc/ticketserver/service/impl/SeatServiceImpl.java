@@ -151,6 +151,16 @@ public class SeatServiceImpl implements SeatService {
         return seatDao.haveEnoughSeat(showID, area, ticketAmount);
     }
 
+    @Override
+    public List<ShowSeatPO> getAvailableSeat(String showID, String area) {
+        return seatDao.getAvailableSeat(showID, area);
+    }
+
+    @Override
+    public String setSeatOccupied(String showID, String area) {
+        return null;
+    }
+
     private String formatInteger(int i, int length) {
         return String.format("%0" + length + "d", i);
     }

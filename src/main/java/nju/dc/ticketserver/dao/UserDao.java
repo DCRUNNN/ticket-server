@@ -38,5 +38,6 @@ public interface UserDao {
 
     int payOrder(String userID, OrderPO orderPO, CouponPO couponPO);
 
+    int spotPurchase(String userID, OrderPO orderPO);
 
 }

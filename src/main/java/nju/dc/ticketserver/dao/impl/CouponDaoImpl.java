@@ -108,9 +108,7 @@ public class CouponDaoImpl implements CouponDao {
 
             po.setUsedMemberPoint(resultSet.getInt("usedMemberPoint"));
             po.setValue(resultSet.getDouble("value"));
-
             po.setExchangeTime(resultSet.getString("exchangeTime"));
-
             return po;
         };
     }

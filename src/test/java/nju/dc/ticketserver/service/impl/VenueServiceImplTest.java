@@ -31,7 +31,16 @@ public class VenueServiceImplTest {
     @Test
     public void getVenuePO() throws Exception {
         System.out.println(venueService.getVenuePO("0000001"));
+    }
 
+    @Test
+    public void arrangeSeat() throws Exception {
+        System.out.println(venueService.arrangeSeat("show-000004"));
+    }
+
+    @Test
+    public void getHotShows() throws Exception {
+        System.out.println(venueService.getHotShows("0000001"));
     }
 
 }

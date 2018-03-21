@@ -3,6 +3,7 @@ package nju.dc.ticketserver.dao;
 import nju.dc.ticketserver.po.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface VenueDao {
 
@@ -18,5 +19,8 @@ public interface VenueDao {
 
     int checkTicket(String orderID);
 
+    List<Map<String, Object>> getHotShows(String venueID);
+
+    List<OrderPO> getVenueAllOrders(String venueID);
 
 }

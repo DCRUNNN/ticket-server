@@ -78,10 +78,9 @@ public class VenueController {
     }
 
     @GetMapping("/checkTicket")
-    public BaseResult checkTicket(@RequestParam String orderID,@RequestParam String venueID) {
+    public BaseResult checkTicket(@RequestParam String orderID, @RequestParam String venueID) {
 
         int result = venueService.checkTicket(orderID, venueID);
-
         if (result == 1) {
             return new BaseResult(0, "检票登记成功！");
         } else if (result == -2) {
@@ -94,12 +93,27 @@ public class VenueController {
             return new BaseResult(-5, "尚未到检票时间！");
         } else if (result == -6) {
             return new BaseResult(-6, "该订单不是本场馆的订单！");
-        }else if (result == -7) {
+        } else if (result == -7) {
             return new BaseResult(-7, "该订单已失效！");
-        }else if (result == -8) {
+        } else if (result == -8) {
             return new BaseResult(-8, "该订单尚未支付！");
         } else {
             return new BaseResult(-1, "检票登记失败！");
         }
+    }
+
+    @GetMapping("/arrangeTicket")
+    public BaseResult arrangeTicket(@RequestParam String showID) {
+        return new BaseResult(0, venueService.arrangeSeat(showID));
+    }
+
+    @GetMapping("/getHotShows")
+    public BaseResult getHotShows(@RequestParam String venueID) {
+        return new BaseResult(0, venueService.getHotShows(venueID));
+    }
+
+    @GetMapping("/getUserPurchaseMethod")
+    public BaseResult getUserPurchaseMethod(@RequestParam String venueID) {
+        return new BaseResult(0, venueService.getUserPurchaseMethod(venueID));
     }
 }

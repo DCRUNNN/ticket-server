@@ -160,9 +160,9 @@ public class UserDaoImpl implements UserDao{
 
         double nowPrice = 0;
         if (isUsingCoupon) {
-            nowPrice = orderPO.getTotalPrice() * orderPO.getDiscount() - couponPO.getValue();
+            nowPrice = orderPO.getTotalPrice() - couponPO.getValue();
         }else{
-            nowPrice = orderPO.getTotalPrice() * orderPO.getDiscount();
+            nowPrice = orderPO.getTotalPrice();
         }
 
         //设置用户余额 总消费金额 VIP
@@ -202,6 +202,29 @@ public class UserDaoImpl implements UserDao{
             sqls[1] = sql2;
             sqls[2] = sql4;
         }
+
+        int[] check = jdbcTemplate.batchUpdate(sqls);
+
+        //如果包括0则这两条插入语句至少有一句不成功，success为false
+        boolean success = !Arrays.asList(check).contains(0);
+//        成功的话返回1
+        return success ? 1 : 0;
+    }
+
+    @Override
+    public int spotPurchase(String userID, OrderPO orderPO) {
+
+        double nowPrice = orderPO.getTotalPrice();
+
+        //设置订单状态
+        String sql = "update orders set orderState = " + '"' + "已支付" + '"' + " , totalPrice = " + '"' + nowPrice + '"' + " where orderID = " + '"' + orderPO.getOrderID() + '"';
+
+        //设置演出总收入
+        String sql2 = "update shows set totalIncome = totalIncome +" + '"' + nowPrice + '"' + "where showID=" + '"' + orderPO.getShowID() + '"';
+
+        String[] sqls = new String[2];
+        sqls[0] = sql;
+        sqls[1] = sql2;
 
         int[] check = jdbcTemplate.batchUpdate(sqls);
 
