@@ -12,7 +12,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao{
@@ -232,6 +234,13 @@ public class UserDaoImpl implements UserDao{
         boolean success = !Arrays.asList(check).contains(0);
 //        成功的话返回1
         return success ? 1 : 0;
+    }
+
+    @Override
+    public List<UserPO> getUserPOList() {
+        String sql = "select * from user";
+        List<UserPO> userPOList = jdbcTemplate.query(sql, getUserPOMapper());
+        return userPOList.size() == 0 ? new ArrayList<>() : userPOList;
     }
 
     private RowMapper<UserPO> getUserPOMapper() {

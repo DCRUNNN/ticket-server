@@ -47,7 +47,7 @@ public class ManagerController {
     }
 
     @GetMapping("/getManagerPO")
-    public BaseResult getManagerPO(@RequestParam  String email) {
+    public BaseResult getManagerPO(@RequestParam String email) {
         return new BaseResult<>(0, managerService.getManagerPO(email));
     }
 
@@ -71,6 +71,31 @@ public class ManagerController {
     @GetMapping("/getNeedToPayShows")
     public BaseResult getNeedToPayShows() {
         return new BaseResult<>(0, managerService.getNeedToPayShows());
+    }
+
+    @GetMapping("/getVenueModifyApps")
+    public BaseResult getVenueModifyApps(@RequestParam String venueID) {
+        return new BaseResult(0, managerService.getVenueModifyApps(venueID));
+    }
+
+    @GetMapping("/getVenuesIncomeInfo")
+    public BaseResult getVenuesIncomeInfo() {
+        return new BaseResult(0, managerService.getVenuesIncomeInfo());
+    }
+
+    @GetMapping("/getVIPTypeInfo")
+    public BaseResult getVIPTypeInfo() {
+        return new BaseResult(0, managerService.getVIPTypeInfo());
+    }
+
+    @GetMapping("/getVIPLevelInfo")
+    public BaseResult getVIPLevelInfo() {
+        return new BaseResult(0, managerService.getVIPLevelInfo());
+    }
+
+    @GetMapping("/getTicketFinances")
+    public BaseResult getTicketFinances() {
+        return new BaseResult(0, managerService.getTicketFinancePOs());
     }
 
 }

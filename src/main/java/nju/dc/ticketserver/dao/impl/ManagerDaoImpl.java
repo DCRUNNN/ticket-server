@@ -192,6 +192,39 @@ public class ManagerDaoImpl implements ManagerDao {
         return modifyApplicationPOList.size() == 0 ? new ArrayList<>() : modifyApplicationPOList;
     }
 
+    @Override
+    public List<ModifyApplicationPO> getVenueModifyApps(String venueID) {
+        String sql = "select * from modifyApplication where venueID = " + '"' + venueID + '"';
+        List<ModifyApplicationPO> modifyApplicationPOList = jdbcTemplate.query(sql, getVenueModifyApplicationPOMapper());
+        return modifyApplicationPOList.size() == 0 ? new ArrayList<>() : modifyApplicationPOList;
+    }
+
+
+    @Override
+    public List<TicketsFinancePO> getTicketFinancePOs() {
+        String sql = "select * from ticketsFinance";
+        List<TicketsFinancePO> resultList = jdbcTemplate.query(sql, getTicketFinancePOMapper());
+        return resultList.size() == 0 ? new ArrayList<>() : resultList;
+    }
+
+
+    private RowMapper<TicketsFinancePO> getTicketFinancePOMapper() {
+        return (resultSet, i) -> {
+            TicketsFinancePO tempPO = new TicketsFinancePO();
+            tempPO.setFinancialID(resultSet.getString("financialID"));
+            tempPO.setDate(resultSet.getString("date"));
+            tempPO.setVenueID(resultSet.getString("venueID"));
+            tempPO.setVenueName(resultSet.getString("venueName"));
+            tempPO.setVenueAddress(resultSet.getString("venueAddress"));
+            tempPO.setTotalIncome(resultSet.getDouble("totalIncome"));
+            tempPO.setVenueIncome(resultSet.getDouble("venueIncome"));
+            tempPO.setTicketsIncome(resultSet.getDouble("ticketsIncome"));
+            tempPO.setPaymentRatio(resultSet.getDouble("paymentRatio"));
+            tempPO.setShowID(resultSet.getString("showID"));
+            return tempPO;
+        };
+    }
+
     private RowMapper<ManagerPO> getManagerPOMapper() {
         return (resultSet, i) -> {
             ManagerPO po = new ManagerPO();
@@ -223,6 +256,8 @@ public class ManagerDaoImpl implements ManagerDao {
             return po;
         };
     }
+
+
 
     private RowMapper<ModifyApplicationPO> getVenueModifyApplicationPOMapper() {
         return (resultSet, i) -> {

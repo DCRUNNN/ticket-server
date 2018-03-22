@@ -1,6 +1,7 @@
 package nju.dc.ticketserver.service.impl;
 
 import nju.dc.ticketserver.dao.OrderDao;
+import nju.dc.ticketserver.dao.ShowDao;
 import nju.dc.ticketserver.dao.VenueDao;
 import nju.dc.ticketserver.dao.utils.DaoUtils;
 import nju.dc.ticketserver.po.*;
@@ -236,5 +237,100 @@ public class VenueServiceImpl implements VenueService {
         result[2] = spotPurchase;
 
         return result;
+    }
+
+    @Override
+    public String[][] getShowsIncomeInfo(String venueID) {
+
+        List<ShowPO> showPOList = showService.getShowByVenueID(venueID);
+
+        String[][] result = new String[2][];
+
+        String[] showNames = new String[showPOList.size()];
+        String[] incomes = new String[showPOList.size()];
+
+        for(int i=0;i<showPOList.size();i++) {
+            showNames[i] = showPOList.get(i).getShowName();
+            incomes[i] = showPOList.get(i).getTotalIncome() + "";
+        }
+
+        result[0] = showNames;
+        result[1] = incomes;
+
+        return result;
+    }
+
+    @Override
+    public int[] getVenueOrdersStateInfo(String venueID) {
+
+        List<OrderPO> orderPOList = venueDao.getVenueAllOrders(venueID);
+
+        int[] result = new int[6];
+        int unpay = 0;
+        int paied = 0;
+        int going = 0;
+        int done = 0;
+        int inValid = 0;
+        int back = 0;
+
+        for (OrderPO order : orderPOList) {
+            switch(order.getOrderState()){
+                case "待支付":
+                    unpay++;
+                    break;
+                case "已支付":
+                    paied++;
+                    break;
+                case "进行中":
+                    going++;
+                    break;
+                case "已完成":
+                    done++;
+                    break;
+                case "已失效":
+                    inValid++;
+                    break;
+                case "已退款":
+                    back++;
+                    break;
+            }
+        }
+
+        result[0] = unpay;
+        result[1] = paied;
+        result[2] = going;
+        result[3] = done;
+        result[4] = inValid;
+        result[5] = back;
+        return result;
+
+    }
+
+
+    @Override
+    public List<TicketsFinancePO> getVenueFinanceInfo(String venueID) {
+        return venueDao.getVenueFinanceInfo(venueID);
+    }
+
+    @Override
+    public int setShowGoing(String showID) {
+        return venueDao.setShowGoing(showID);
+    }
+
+    @Override
+    public int setShowDone(String showID) {
+        return venueDao.setShowDone(showID);
+    }
+
+    @Override
+    public int modifyUserPassword(String venueID, String previousPassword, String newPassword) {
+        VenuePO checkVenuePO = getVenuePO(venueID);
+        boolean equal = EncryptHelper.checkPassword(previousPassword, checkVenuePO.getPassword());
+        if(equal){
+            newPassword = EncryptHelper.getShaEncryption(newPassword);
+            return venueDao.modifyPassword(venueID, newPassword);
+        }else{
+            return -1;
+        }
     }
 }

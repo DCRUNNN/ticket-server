@@ -1,9 +1,6 @@
 package nju.dc.ticketserver.service;
 
-import nju.dc.ticketserver.po.ManagerPO;
-import nju.dc.ticketserver.po.ModifyApplicationPO;
-import nju.dc.ticketserver.po.RegApplicationPO;
-import nju.dc.ticketserver.po.ShowPO;
+import nju.dc.ticketserver.po.*;
 
 import java.util.List;
 
@@ -22,5 +19,15 @@ public interface ManagerService {
     int giveMoneyToVenue(String showID, double paymentRatio);
 
     List<ShowPO> getNeedToPayShows();
+
+    List<ModifyApplicationPO> getVenueModifyApps(String venueID);
+
+    String[][] getVenuesIncomeInfo();
+
+    String[][] getVIPTypeInfo();
+
+    int[] getVIPLevelInfo();
+
+    List<TicketsFinancePO> getTicketFinancePOs();
 
 }

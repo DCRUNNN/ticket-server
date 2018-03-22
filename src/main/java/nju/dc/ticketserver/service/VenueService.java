@@ -23,4 +23,16 @@ public interface VenueService {
     String[][] getHotShows(String venueID);
 
     int[] getUserPurchaseMethod(String venueID);
+
+    String[][] getShowsIncomeInfo(String venueID);
+
+    int[] getVenueOrdersStateInfo(String venueID);
+
+    List<TicketsFinancePO> getVenueFinanceInfo(String venueID);
+
+    int setShowGoing(String showID);
+
+    int setShowDone(String showID);
+
+    int modifyUserPassword(String venueID, String previousPassword, String newPassword);
 }

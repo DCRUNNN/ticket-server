@@ -116,4 +116,42 @@ public class VenueController {
     public BaseResult getUserPurchaseMethod(@RequestParam String venueID) {
         return new BaseResult(0, venueService.getUserPurchaseMethod(venueID));
     }
+
+    @GetMapping("/getShowsIncomeInfo")
+    public BaseResult getShowsIncomeInfo(@RequestParam String venueID) {
+        return new BaseResult(0, venueService.getShowsIncomeInfo(venueID));
+    }
+
+    @GetMapping("/getVenueOrdersStateInfo")
+    public BaseResult getVenueOrdersStateInfo(@RequestParam String venueID) {
+        return new BaseResult(0, venueService.getVenueOrdersStateInfo(venueID));
+    }
+
+    @GetMapping("/getVenueFinanceInfo")
+    public BaseResult getVenueFinanceInfo(@RequestParam String venueID) {
+        return new BaseResult(0, venueService.getVenueFinanceInfo(venueID));
+    }
+
+    @GetMapping("/setShowGoing")
+    public BaseResult setShowGoing(@RequestParam String showID) {
+        return new BaseResult(0, venueService.setShowGoing(showID));
+    }
+
+    @GetMapping("/setShowDone")
+    public BaseResult setShowDone(@RequestParam String showID) {
+        return new BaseResult(0, venueService.setShowDone(showID));
+    }
+
+    @GetMapping("/modifyVenuePassword")
+    public BaseResult modifyVenuePassword(@RequestParam String venueID, @RequestParam String previousPassword, @RequestParam String newPassword) {
+        int result = venueService.modifyUserPassword(venueID, previousPassword, newPassword);
+        if (result == 1) {
+            return new BaseResult<>(0, "Modify Password Successfully!");
+        } else if (result == -1) {
+            return new BaseResult<>(-1, "当前密码输入不正确!");
+        } else {
+            return new BaseResult<>(-2, "修改密码失败");
+        }
+    }
+
 }

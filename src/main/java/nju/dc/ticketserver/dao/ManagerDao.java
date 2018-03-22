@@ -20,4 +20,8 @@ public interface ManagerDao {
 
     TicketsFinancePO createTicketsFinancePO(ShowPO showPO, double paymentRatio);
 
+    List<ModifyApplicationPO> getVenueModifyApps(String venueID);
+
+    List<TicketsFinancePO> getTicketFinancePOs();
+
 }

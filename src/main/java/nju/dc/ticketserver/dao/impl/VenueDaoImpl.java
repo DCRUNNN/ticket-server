@@ -94,26 +94,15 @@ public class VenueDaoImpl implements VenueDao {
 
     @Override
     public VenuePO getVenuePO(String venueID) {
+
+        String checkExistSql = "Select count(1) from venue where venueID = " + '"' + venueID + '"';
+        int checkExists = jdbcTemplate.queryForObject(checkExistSql, new Object[]{}, Integer.class);
+        if (checkExists == 0) {
+            return null;
+        }
+
         String sql = "Select * from venue where venueID = " + '"' + venueID + '"';
-        VenuePO po = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
-            VenuePO tempPO = new VenuePO();
-            tempPO.setVenueID(venueID);
-            tempPO.setVenueName(resultSet.getString("venueName"));
-            tempPO.setCity(resultSet.getString("city"));
-            tempPO.setPassword(resultSet.getString("password"));
-            tempPO.setAddress(resultSet.getString("address"));
-            tempPO.setArea(resultSet.getString("area"));
-            tempPO.setRow(resultSet.getInt("row"));
-            tempPO.setSeat(resultSet.getString("seat"));
-            tempPO.setVenueInfo(resultSet.getString("venueInfo"));
-
-            String date = resultSet.getString("regDate");
-            tempPO.setRegDate(date.substring(0, date.length() - 2));
-
-            tempPO.setIncome(resultSet.getInt("income"));
-            tempPO.setState(resultSet.getString("state"));
-            return tempPO;
-        });
+        VenuePO po = jdbcTemplate.queryForObject(sql, getVenuePOMapper());
         return po;
     }
 
@@ -144,6 +133,49 @@ public class VenueDaoImpl implements VenueDao {
         return orderPOList.size() == 0 ? new ArrayList<>() : orderPOList;
     }
 
+    @Override
+    public List<VenuePO> getVenuePOList() {
+        String sql = "select * from venue";
+        List<VenuePO> venuePOList = jdbcTemplate.query(sql, getVenuePOMapper());
+        return venuePOList.size() == 0 ? new ArrayList<>() : venuePOList;
+    }
+
+    @Override
+    public List<TicketsFinancePO> getVenueFinanceInfo(String venueID) {
+        String sql = "select * from ticketsFinance where venueID = " + '"' + venueID + '"';
+        List<TicketsFinancePO> ticketsFinancePOList = jdbcTemplate.query(sql, getTicketFinancePOMapper());
+        return ticketsFinancePOList.size() == 0 ? new ArrayList<>() : ticketsFinancePOList;
+    }
+
+    @Override
+    public int setShowGoing(String showID) {
+        String sql = "update shows set state = " + '"' + "进行中" + '"' + " where showID = " + '"' + showID + '"';
+        return jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public int setShowDone(String showID) {
+        String sql = "update shows set state = " + '"' + "已结束" + '"' + " where showID = " + '"' + showID + '"';
+        String sql2 = "update orders set orderState = " + '"' + "已完成" + '"' + " where showID = " + '"' + showID + '"';
+
+        String[] sqls = new String[2];
+        sqls[0] = sql;
+        sqls[1] = sql2;
+
+        int[] check = jdbcTemplate.batchUpdate(sqls);
+
+        //如果包括0则这两条插入语句至少有一句不成功，success为false
+        boolean success = !Arrays.asList(check).contains(0);
+        //成功的话返回1
+        return success ? 1 : 0;
+    }
+
+    @Override
+    public int modifyPassword(String venueID, String newPassword) {
+        String sql = "update venue set password = " + '"' + newPassword + '"' + " where venueID = " + '"' + venueID + '"';
+        return jdbcTemplate.update(sql);
+    }
+
     private RowMapper<OrderPO> getOrderPOMapper() {
         return (resultSet, i) -> {
             OrderPO po = new OrderPO();
@@ -166,4 +198,44 @@ public class VenueDaoImpl implements VenueDao {
             return po;
         };
     }
+
+    private RowMapper<TicketsFinancePO> getTicketFinancePOMapper() {
+        return (resultSet, i) -> {
+            TicketsFinancePO tempPO = new TicketsFinancePO();
+            tempPO.setFinancialID(resultSet.getString("financialID"));
+            tempPO.setDate(resultSet.getString("date"));
+            tempPO.setVenueID(resultSet.getString("venueID"));
+            tempPO.setVenueName(resultSet.getString("venueName"));
+            tempPO.setVenueAddress(resultSet.getString("venueAddress"));
+            tempPO.setTotalIncome(resultSet.getDouble("totalIncome"));
+            tempPO.setVenueIncome(resultSet.getDouble("venueIncome"));
+            tempPO.setTicketsIncome(resultSet.getDouble("ticketsIncome"));
+            tempPO.setPaymentRatio(resultSet.getDouble("paymentRatio"));
+            tempPO.setShowID(resultSet.getString("showID"));
+            return tempPO;
+        };
+    }
+
+    private RowMapper<VenuePO> getVenuePOMapper(){
+        return (resultSet, i) -> {
+            VenuePO tempPO = new VenuePO();
+            tempPO.setVenueID(resultSet.getString("venueID"));
+            tempPO.setVenueName(resultSet.getString("venueName"));
+            tempPO.setCity(resultSet.getString("city"));
+            tempPO.setPassword(resultSet.getString("password"));
+            tempPO.setAddress(resultSet.getString("address"));
+            tempPO.setArea(resultSet.getString("area"));
+            tempPO.setRow(resultSet.getInt("row"));
+            tempPO.setSeat(resultSet.getString("seat"));
+            tempPO.setVenueInfo(resultSet.getString("venueInfo"));
+
+            String date = resultSet.getString("regDate");
+            tempPO.setRegDate(date.substring(0, date.length() - 2));
+
+            tempPO.setIncome(resultSet.getInt("income"));
+            tempPO.setState(resultSet.getString("state"));
+            return tempPO;
+        };
+    }
+
 }

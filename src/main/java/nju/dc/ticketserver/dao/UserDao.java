@@ -4,6 +4,8 @@ import nju.dc.ticketserver.po.CouponPO;
 import nju.dc.ticketserver.po.OrderPO;
 import nju.dc.ticketserver.po.UserPO;
 
+import java.util.List;
+
 public interface UserDao {
 
     int addUser(UserPO userPO);
@@ -39,5 +41,7 @@ public interface UserDao {
     int payOrder(String userID, OrderPO orderPO, CouponPO couponPO);
 
     int spotPurchase(String userID, OrderPO orderPO);
+
+    List<UserPO> getUserPOList();
 
 }

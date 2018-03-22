@@ -23,4 +23,15 @@ public interface VenueDao {
 
     List<OrderPO> getVenueAllOrders(String venueID);
 
+    List<TicketsFinancePO> getVenueFinanceInfo(String venueID);
+
+    List<VenuePO> getVenuePOList();
+
+    int setShowGoing(String showID);
+
+    int setShowDone(String showID);
+
+    int modifyPassword(String venueID, String newPassword);
+
+
 }
